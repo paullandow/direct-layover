@@ -1,0 +1,255 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Direct Layover</title><style>body{margin:0}html,body{overflow:hidden}#dl-screen#dl-screen{min-height:0;height:100dvh}</style></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600&display=swap">
+<style>
+#dl-screen{min-height:clamp(390px,60vw,610px);box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:clamp(17px,5vw,52px);background:#f8f6f0;color:#000;font:500 16px Geist,Arial,sans-serif}
+#dl-screen header{display:flex;justify-content:space-between;align-items:start;gap:12px}
+#dl-screen .logo{font-size:clamp(43px,8.05vw,94px);line-height:.84;letter-spacing:-.09em;animation:dl-arrive 700ms ease-out both}
+#dl-screen .indent{margin-left:.4em}
+#dl-screen .dot{display:inline-block;width:.17em;height:.15em;background:#000;border-radius:45% 55% 42% 58%;margin-left:.08em;transform:rotate(-19deg)}
+#dl-screen footer{text-align:right;letter-spacing:-.04em}
+#dl-screen .date{display:inline-block;text-align:left;line-height:.94}
+#dl-screen .content{display:grid;place-items:center;min-width:0}
+#dl-screen .project{background:#3d473b;color:#f8f6f0;width:min(100%,540px);box-sizing:border-box;padding:clamp(18px,4vw,36px);animation:dl-arrive .3s ease-out both}
+#dl-screen .project[hidden]{display:none}
+#dl-screen h2{font:600 clamp(27px,6vw,55px)/1 Geist,Arial,sans-serif;letter-spacing:-.07em;margin:0}
+#dl-screen .wave{height:42px;display:flex;align-items:center;gap:3%;margin-top:14px}
+#dl-screen .wave i{width:2%;height:var(--level);background:currentColor}
+#dl-screen .toggle{font:inherit;font-size:20px;color:inherit;background:transparent;border:0;border-bottom:1px solid currentColor;padding:8px 0;cursor:pointer}
+@keyframes dl-arrive{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){#dl-screen .logo,#dl-screen .project{animation:none}}
+#dl-screen .city{display:block;margin-top:.12em;margin-left:.5em;font-size:.8em}
+
+#dl-screen{position:relative;overflow:hidden;--edge:clamp(17px,5vw,52px)}
+#dl-screen header{display:grid;justify-content:start;gap:36px}
+#dl-screen .projects{position:relative;margin-left:0.8em;padding-bottom:7px}
+#dl-screen .toggle{border:0;animation:dl-project-slide 900ms cubic-bezier(.22,.72,.25,1) 540ms both}
+#dl-screen .trail{position:absolute;bottom:4px;left:calc(-1 * (var(--edge) + 0.8em) - 9px);width:calc(var(--edge) + 0.8em + 108px);height:1px;background:repeating-linear-gradient(90deg,currentColor 0 6px,transparent 6px 12px);animation:dl-trail-slide 620ms cubic-bezier(.2,.68,.25,1) 720ms both;pointer-events:none}
+@keyframes dl-project-slide{from{transform:translateX(105vw)}to{transform:translateX(0)}}
+@keyframes dl-trail-slide{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){#dl-screen .toggle,#dl-screen .trail{animation:none}}
+#dl-screen footer{animation:dl-arrive 650ms ease-out 1120ms both}
+@media(prefers-reduced-motion:reduce){#dl-screen footer{animation:none}}
+
+#dl-screen .contact{position:absolute;top:63%;right:29%;font-size:13px;animation:dl-arrive 400ms ease-out 900ms both}
+#dl-screen .trail{display:none;bottom:0}
+#dl-screen.show-projects .trail{display:block;animation-delay:0ms}
+#dl-screen.show-projects .contact{display:none}
+@media(prefers-reduced-motion:reduce){#dl-screen .contact{animation:none}}
+
+#dl-screen .about{position:absolute;top:44%;left:37%;border:0;background:none;color:inherit;padding:5px;font:500 29px Geist,Arial,sans-serif;letter-spacing:-.06em;cursor:pointer;animation:dl-arrive 400ms ease-out 1000ms both}
+#dl-screen #dl-about{position:absolute;top:56%;left:37%;right:12%;background:#f8f6f0;padding:10px 0}
+#dl-screen #dl-about h2{font-size:22px}
+#dl-screen #dl-about p{margin:6px 0;font-size:14px}
+#dl-screen.show-about .contact{visibility:hidden}
+#dl-screen.show-projects .about{display:none}
+@media(prefers-reduced-motion:reduce){#dl-screen .about{animation:none}}
+
+#dl-screen .about{font-size:clamp(39px,7vw,68px);top:var(--about-y,24%);left:var(--about-x,70%)}
+@media(max-width:460px){#dl-screen .about{left:min(var(--about-x,70%),61%)}}
+
+#dl-screen .logo,#dl-screen footer{animation-delay:300ms;animation-duration:1300ms}
+#dl-screen :is(.toggle,.contact,.about){animation:none}
+@media(prefers-reduced-motion:no-preference){
+#dl-screen:not(.arriving) :is(.toggle,.contact,.about){opacity:0}
+#dl-screen.arriving :is(.toggle,.contact,.about){animation:dl-directory var(--duration) cubic-bezier(.24,.66,.31,1) var(--delay) both}
+}
+@keyframes dl-directory{
+from{opacity:.08;transform:translate(var(--x),var(--y))}
+to{opacity:1;transform:translate(0,0)}
+}
+
+#dl-screen{isolation:isolate;filter:invert(1);background:#07090f;color:white}
+#dl-screen .dot{background:white}
+#dl-screen #dl-about{background:#07090f}
+#dl-screen .project{filter:invert(1)}
+#dl-screen .contact{background:none;border:0;color:inherit;font-family:inherit;cursor:pointer;padding:5px}
+#dl-screen .toggle,#dl-screen .about,#dl-screen .contact{transition:opacity 280ms}
+#dl-screen .muted-label{opacity:0!important;pointer-events:none}
+#dl-screen .moving-label{position:absolute;z-index:4;white-space:nowrap;mix-blend-mode:difference;pointer-events:none;color:white}
+#dl-screen .moving-label .colon{display:inline-block}
+#dl-screen .moving-trail{position:absolute;height:1px;background:repeating-linear-gradient(90deg,white 0 6px,transparent 6px 12px);pointer-events:none}
+#dl-screen .return{position:absolute;top:16px;right:16px;background:none;border:0;color:inherit;font:inherit;cursor:pointer}
+#dl-screen .return{right:auto;z-index:5;font-size:34px;line-height:1;padding:5px 10px 8px 0}
+</style>
+<section id="dl-screen" aria-label="Direct Layover homepage mockup">
+<header><div class="logo" role="img" aria-label="Direct Layover">direct<br><span class="indent">layover<span class="dot"></span></span></div><div class="projects"><button type="button" class="toggle" aria-expanded="false" aria-controls="dl-project">projects</button><span class="trail" aria-hidden="true"></span></div></header>
+<div class="content"><section class="project" id="dl-project" hidden><h2>BeatMarker</h2><div class="wave" aria-hidden="true"><i style="--level:18%"></i><i style="--level:25%"></i><i style="--level:50%"></i><i style="--level:37%"></i><i style="--level:71%"></i><i style="--level:90%"></i><i style="--level:45%"></i><i style="--level:74%"></i><i style="--level:31%"></i><i style="--level:53%"></i><i style="--level:82%"></i><i style="--level:43%"></i><i style="--level:25%"></i><i style="--level:34%"></i><i style="--level:16%"></i></div></section></div>
+<button class="about" type="button" aria-expanded="false" aria-controls="dl-about">about</button><section id="dl-about" hidden><h2>Direct Layover</h2><p>An independent creative studio and publisher of BeatMarker.</p></section><button type="button" class="contact" aria-expanded="false">contact</button><footer><span class="date">est.<br><span class="indent">2026</span><span class="city">in en why sea</span></span></footer>
+</section>
+<script>
+{
+const root=document.getElementById('dl-screen');
+
+const labels=[root.querySelector('.toggle'),root.querySelector('.contact'),root.querySelector('.about')];
+const panels=[root.querySelector('.project'),null,root.querySelector('#dl-about')];
+const directions=[['-105vw','0px'],['0px','-105vh'],['0px','105vh']];
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const back=document.createElement('button');
+back.className='return';
+back.textContent='←';
+back.setAttribute('aria-label','Back to directory');
+back.hidden=true;
+root.append(back);
+let active;
+let clones=[];
+let reversing=false;
+let selectedLabel;
+let timeline=[];
+let clock;
+function reset(){
+ active=undefined;
+ reversing=false;
+ timeline=[];
+ clock=undefined;
+ back.getAnimations().forEach(animation=>animation.cancel());
+ clones.forEach(node=>node.remove());
+ clones=[];
+ back.hidden=true;
+ labels.forEach(label=>{
+  label.classList.remove('muted-label');
+  label.disabled=false;
+  label.setAttribute('aria-expanded','false');
+ });
+ panels.forEach(panel=>{if(panel) panel.hidden=true;});
+}
+function entrance(){
+ reset();
+ root.classList.remove('arriving');
+ const fixed=root.querySelectorAll('.logo,footer');
+ fixed.forEach(node=>node.style.animationName='none');
+ void root.offsetWidth;
+ fixed.forEach(node=>node.style.removeProperty('animation-name'));
+ labels.forEach((label,i)=>{
+  label.style.setProperty('--x',directions[i][0]);
+  label.style.setProperty('--y',directions[i][1]);
+  label.style.setProperty('--delay',(1650+Math.random()*650)+'ms');
+  label.style.setProperty('--duration',(2000+Math.random()*450)+'ms');
+ });
+ root.classList.add('arriving');
+}
+async function select(label,index){
+ if(active) return;
+ const rect=label.getBoundingClientRect();
+ const bounds=root.getBoundingClientRect();
+ const style=getComputedStyle(label);
+ const speed=reduced.matches?0:parseFloat(label.style.getPropertyValue('--duration'));
+ const word=document.createElement('span');
+ word.className='moving-label';
+ word.style.font=style.font;
+ word.style.letterSpacing=style.letterSpacing;
+ word.style.left=(rect.left-bounds.left+parseFloat(style.paddingLeft))+'px';
+ word.style.top=(rect.top-bounds.top+parseFloat(style.paddingTop))+'px';
+ word.textContent=label.textContent;
+ const colon=document.createElement('span');
+ colon.className='colon';
+ colon.textContent=':';
+ word.append(colon);
+ const trail=document.createElement('span');
+ trail.className='moving-trail';
+ root.append(word,trail);
+ clones=[word,trail];
+ active=word;
+ selectedLabel=label;
+ clock=performance.now();
+ labels.forEach(item=>{item.classList.add('muted-label');item.disabled=true;});
+ label.setAttribute('aria-expanded','true');
+ const startX=parseFloat(word.style.left);
+ const edge=12;
+ const endX=edge;
+ const dx=edge-startX;
+ const bump=5-startX;
+ const delay=reduced.matches?0:280;
+ const easing='cubic-bezier(.24,.66,.31,1)';
+ const timing={duration:speed,delay,easing,fill:'both'};
+ if(index===0) timing.duration=speed*1.55;
+ word.style.transformOrigin='left center';
+ const fold=(x,bow,offset)=>({transform:'translateX('+x+'px)',bow,offset});
+ const frames=index===0?[
+  fold(0,0,0),
+  fold(bump,0,.61),
+  fold(bump,23,.69),
+  fold(dx,0,1)
+ ]:[{transform:'translateX(0)'},{transform:'translateX('+dx+'px)'}];
+ const motion=word.animate(frames.map(({transform,offset})=>({transform,offset})),timing);
+ if(index===0 && !reduced.matches){
+  const letters=Array.from(label.textContent,character=>{
+   const letter=document.createElement('span');
+   letter.textContent=character;
+   letter.style.display='inline-block';
+   return letter;
+  });
+  word.replaceChildren(...letters,colon);
+  letters.forEach((letter,i)=>{
+   const position=i/(letters.length-1);
+   letter.animate(frames.map(frame=>{
+    const bend=(frame.bow||0)/60;
+    const lift=-9*bend*Math.sin(Math.PI*position);
+    const tuck=-9*bend*position;
+    const angle=-16*bend*Math.cos(Math.PI*position);
+    return {offset:frame.offset,transform:'translate('+tuck+'px,'+lift+'px) rotate('+angle+'deg)'};
+   }),timing);
+  });
+ }
+ const top=parseFloat(word.style.top);
+ colon.style.visibility='hidden';
+ const tip=document.createElement('span');
+ tip.className='moving-label';
+ tip.style.font=style.font;
+ tip.textContent=':';
+ const end=endX+word.offsetWidth-colon.offsetWidth;
+ tip.style.cssText+=';left:'+end+'px;top:'+top+'px';
+ root.append(tip);
+ clones.push(tip);
+ const baseline=document.createElement('span');
+ baseline.style.cssText='display:inline-block;width:0;height:0;vertical-align:baseline';
+ word.append(baseline);
+ const baselineY=baseline.getBoundingClientRect().top-bounds.top;
+ baseline.remove();
+ const measure=document.createElement('canvas').getContext('2d');
+ measure.font=style.font;
+ const inkBottom=baselineY+measure.measureText(label.textContent).actualBoundingBoxDescent;
+ trail.style.cssText='left:'+(-bounds.width)+'px;top:'+(inkBottom+3)+'px;width:'+(bounds.width+end)+'px';
+ const sweep={duration:Math.max(0,timing.duration-(index===0&&!reduced.matches?500:0)),delay:delay+(reduced.matches?0:500),easing,fill:'both'};
+ const sweepFrames=[{transform:'translateX('+(2*bounds.width)+'px)'},{transform:'translateX(0)'}];
+ const dashMotion=trail.animate(sweepFrames,sweep);
+ tip.animate(sweepFrames,sweep);
+ timeline=clones.flatMap(node=>node.getAnimations({subtree:true}));
+ back.style.left=endX+'px';
+ back.style.top=(inkBottom+8)+'px';
+ back.hidden=false;
+ const arrowDuration=reduced.matches?0:Math.min(1100,sweep.duration);
+ const arrival=back.animate(
+  [{transform:'translateX(-72px)',opacity:0},{transform:'translateX(0)',opacity:1}],
+  {duration:arrowDuration,delay:sweep.delay+sweep.duration-arrowDuration,easing:'cubic-bezier(.22,.65,.28,1)',fill:'both'}
+ );
+ await Promise.all([motion.finished,dashMotion.finished,arrival.finished]).catch(()=>{});
+ if(active!==word || reversing) return;
+ if(panels[index]) panels[index].hidden=false;
+ if(active===word && !reversing) back.focus({preventScroll:true});
+}
+labels.forEach((label,index)=>label.addEventListener('click',()=>select(label,index)));
+back.addEventListener('click',rewind);
+root.addEventListener('keydown',event=>{if(event.key==='Escape') rewind();});
+entrance();
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body></html>
