@@ -361,7 +361,14 @@ async function rewind(){
  const label=selectedLabel;
  const end=Math.max(0,...timeline.map(animation=>animation.effect.getComputedTiming().endTime));
  const elapsed=Math.min(performance.now()-clock,end);
- panels.forEach(panel=>{if(panel) panel.hidden=true;});
+ panels.filter(panel=>panel && !panel.hidden).forEach(panel=>{
+  if(reduced.matches){panel.hidden=true;return;}
+  const fade=panel.animate([{opacity:1},{opacity:0}],{duration:360,easing:'ease-out',fill:'forwards'});
+  fade.finished.then(()=>{
+   if(active===current) panel.hidden=true;
+   fade.cancel();
+  }).catch(()=>{});
+ });
  if(!back.hidden && !reduced.matches){
   back.getAnimations().forEach(animation=>animation.cancel());
   await back.animate(
@@ -431,6 +438,7 @@ entrance();
 
 
 </body></html>
+
 
 
 
