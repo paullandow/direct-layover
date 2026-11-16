@@ -49,7 +49,7 @@
 #dl-screen .logo,#dl-screen footer{animation-delay:300ms;animation-duration:1300ms}
 #dl-screen :is(.toggle,.contact,.about){animation:none}
 @media(prefers-reduced-motion:no-preference){
-#dl-screen:not(.arriving) :is(.toggle,.contact,.about){opacity:0}
+
 #dl-screen.arriving :is(.toggle,.contact,.about){animation:dl-directory var(--duration) cubic-bezier(.24,.66,.31,1) var(--delay) both}
 }
 @keyframes dl-directory{
@@ -227,6 +227,57 @@ async function select(label,index){
  if(active===word && !reversing) back.focus({preventScroll:true});
 }
 labels.forEach((label,index)=>label.addEventListener('click',()=>select(label,index)));
+async function rewind(){
+ if(!active || reversing) return;
+ reversing=true;
+ const current=active;
+ const label=selectedLabel;
+ const end=Math.max(0,...timeline.map(animation=>animation.effect.getComputedTiming().endTime));
+ const elapsed=Math.min(performance.now()-clock,end);
+ panels.forEach(panel=>{if(panel) panel.hidden=true;});
+ if(!back.hidden && !reduced.matches){
+  back.getAnimations().forEach(animation=>animation.cancel());
+  await back.animate(
+   [{transform:'translateX(0)',opacity:1},{transform:'translateX(-72px)',opacity:0}],
+   {duration:1100,easing:'cubic-bezier(.72,0,.78,.35)',fill:'forwards'}
+  ).finished.catch(()=>{});
+ }
+ if(active!==current) return;
+ back.hidden=true;
+ if(!reduced.matches){
+  const returning=label===labels[0]?timeline.filter(animation=>!current.contains(animation.effect.target)):timeline;
+  returning.forEach(animation=>{
+   animation.currentTime=elapsed;
+   animation.reverse();
+   if(label===labels[0]) animation.updatePlaybackRate(-1.25);
+  });
+  const exits=returning.map(animation=>animation.finished.catch(()=>{}));
+  if(label===labels[0]){
+   const originalX=label.getBoundingClientRect().left-root.getBoundingClientRect().left+parseFloat(getComputedStyle(label).paddingLeft);
+   const offset=originalX-parseFloat(current.style.left);
+   exits.push(current.animate(
+    [{transform:getComputedStyle(current).transform},{transform:'translateX('+offset+'px)'}],
+    {duration:elapsed/1.25,easing:'cubic-bezier(.69,0,.76,.34)',fill:'forwards'}
+   ).finished.catch(()=>{}));
+  }
+  await Promise.all(exits);
+
+ }
+ if(active!==current) return;
+ reset();
+ if(!reduced.matches){
+  labels.filter(item=>item!==label).forEach(item=>{
+   item.getAnimations().forEach(animation=>{if(animation.animationName==='dl-directory') animation.cancel();});
+   const direction=item.style.getPropertyValue('--x')+','+item.style.getPropertyValue('--y');
+   item.animate([
+    {opacity:0,transform:'translate('+direction+')',offset:0},
+    {opacity:.08,offset:.06},
+    {opacity:1,transform:'translate(0,0)',offset:1}
+   ],{duration:parseFloat(item.style.getPropertyValue('--duration')),delay:Math.random()*650,easing:'cubic-bezier(.24,.66,.31,1)',fill:'backwards'});
+  });
+ }
+ label.focus({preventScroll:true});
+}
 back.addEventListener('click',rewind);
 root.addEventListener('keydown',event=>{if(event.key==='Escape') rewind();});
 entrance();
@@ -253,3 +304,4 @@ entrance();
 
 
 </body></html>
+
