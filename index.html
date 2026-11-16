@@ -50,7 +50,7 @@
 #dl-screen :is(.toggle,.contact,.about){animation:none}
 @media(prefers-reduced-motion:no-preference){
 
-#dl-screen.arriving :is(.toggle,.contact,.about){animation:dl-directory var(--duration) cubic-bezier(.24,.66,.31,1) var(--delay) both}
+#dl-screen.arriving :is(.toggle,.contact,.about){animation:dl-directory var(--duration) cubic-bezier(.24,.66,.31,1) var(--delay) backwards}
 }
 @keyframes dl-directory{
 from{opacity:.08;transform:translate(var(--x),var(--y))}
@@ -125,6 +125,7 @@ function entrance(){
   label.style.setProperty('--duration',(2000+Math.random()*450)+'ms');
  });
  root.classList.add('arriving');
+ setTimeout(() => root.classList.remove('arriving'), 4900);
 }
 async function select(label,index){
  if(active) return;
@@ -304,4 +305,5 @@ entrance();
 
 
 </body></html>
+
 
