@@ -46,7 +46,7 @@
 #dl-screen .about{font-size:clamp(39px,7vw,68px);top:var(--about-y,24%);left:var(--about-x,70%)}
 @media(max-width:460px){#dl-screen .about{left:min(var(--about-x,70%),61%)}}
 
-#dl-screen .logo,#dl-screen footer{animation-delay:300ms;animation-duration:1300ms}
+#dl-screen .logo,#dl-screen footer{animation-delay:100ms;animation-duration:950ms}
 #dl-screen :is(.toggle,.contact,.about){animation:none}
 @media(prefers-reduced-motion:no-preference){
 
@@ -121,7 +121,7 @@ function entrance(){
  labels.forEach((label,i)=>{
   label.style.setProperty('--x',directions[i][0]);
   label.style.setProperty('--y',directions[i][1]);
-  label.style.setProperty('--delay',(1650+Math.random()*650)+'ms');
+  label.style.setProperty('--delay',(850+Math.random()*350)+'ms');
   label.style.setProperty('--duration',(2000+Math.random()*450)+'ms');
  });
  root.classList.add('arriving');
@@ -305,5 +305,6 @@ entrance();
 
 
 </body></html>
+
 
 
