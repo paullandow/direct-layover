@@ -1,38 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Direct Layover</title><style>body{margin:0}html,body{overflow:hidden}#dl-screen#dl-screen{min-height:0;height:100dvh}
-#dl-screen{padding-bottom:8px}
-#dl-screen .date{border:0;background:none;color:inherit;font:inherit;text-align:left;line-height:.94;cursor:pointer;padding:4px}
-#dl-screen .project{position:absolute;left:7.5%;top:var(--project-top,40%);width:min(210px,57vw,29dvh);min-width:0;padding:0;background:none;color:#000;animation:none}
-#bm-size figure{width:100%;margin:0;container-type:inline-size}
-#bm-size canvas{width:100%;height:auto;display:block}
-#bm-size figcaption{font:500 20cqw/1 Geist,Arial,sans-serif;letter-spacing:-.065em;text-align:center;margin-top:8px;white-space:nowrap}
-#bm-size .symbol{position:relative}
-#bm-size .symbol i{position:absolute;z-index:1;top:2.28%;left:48.29%;width:2.98%;height:97.72%;border-radius:999px;background:#ff681c}
-#bm-size .play canvas{animation:bm-reveal .5s ease 1.7s both}
-#bm-size .play .symbol i{animation:bm-bar .7s ease 1.7s both}
-#bm-size .play figcaption{animation:bm-show .25s ease 2.15s both}
-@keyframes bm-show{from{opacity:0}to{opacity:1}}
-#bm-size .trace{display:none;position:absolute;inset:0}
-#bm-size .play .trace{display:block;animation:bm-trace 1.55s linear 0s both}
-#bm-size .play canvas[role]{animation:bm-pulse .62s ease-in-out 1.18s both}
-#bm-size .play .symbol i{transform-origin:center 55%;animation:bm-grow .52s cubic-bezier(.22,.65,.28,1) .53s both}
-#bm-size .play figcaption{animation:bm-show .3s ease 1.80s both}
-
-@keyframes bm-grow{from{transform:scaleY(0);opacity:0}15%{opacity:1}70%{transform:scaleY(1.09);opacity:1}to{transform:scaleY(1);opacity:1}}
-#bm-size .tick{display:none;position:absolute;z-index:2;left:var(--x);top:56.3%;width:1.2%;height:24%;border-radius:999px;background:#ff681c;transform:translate(-50%,-50%)}
-#bm-size .play .tick{display:block;animation:bm-small-grow .34s ease-out var(--hit) both,bm-small-exit .28s ease 1.18s forwards}
-@keyframes bm-small-grow{from{transform:translate(-50%,-50%) scaleY(0)}65%{transform:translate(-50%,-50%) scaleY(1.25)}to{transform:translate(-50%,-50%) scaleY(1)}}
-@keyframes bm-small-exit{from{opacity:1}to{opacity:0}}
-@keyframes bm-pulse{0%{opacity:0;transform:scale(1)}45%{opacity:1;transform:scale(1.13)}100%{opacity:1;transform:scale(1)}}
-const trace=root.querySelector('.trace').getContext('2d');
-
-@keyframes bm-trace{
-0%{clip-path:inset(0 100% 0 0);opacity:1}
-70%{clip-path:inset(0 0 0 0);opacity:1}
-82%{clip-path:inset(0 0 0 0);opacity:1}
-100%{clip-path:inset(0 0 0 0);opacity:0}
-}
-@media(prefers-reduced-motion:reduce){#bm-size .play *{animation:none}}
-</style></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600&display=swap">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Direct Layover</title><style>body{margin:0}html,body{overflow:hidden}#dl-screen#dl-screen{min-height:0;height:100dvh}</style></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600&display=swap">
 <style>
 #dl-screen{min-height:clamp(390px,60vw,610px);box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:clamp(17px,5vw,52px);background:#f8f6f0;color:#000;font:500 16px Geist,Arial,sans-serif}
 #dl-screen header{display:flex;justify-content:space-between;align-items:start;gap:12px}
@@ -106,25 +72,22 @@ to{opacity:1;transform:translate(0,0)}
 
 #dl-screen{padding-bottom:8px}
 #dl-screen .date{border:0;background:none;color:inherit;font:inherit;text-align:left;line-height:.94;cursor:pointer;padding:4px}
-#dl-screen .project{position:absolute;left:7.5%;top:var(--project-top,40%);width:min(210px,57vw,29dvh);min-width:0;padding:0;background:none;color:#000;animation:none}
+#dl-screen .project{position:absolute;left:7.5%;top:var(--project-top,40%);width:min(250px,61vw,34dvh);min-width:0;padding:0;background:none;color:#000;animation:none}
 #bm-size figure{width:100%;margin:0;container-type:inline-size}
 #bm-size canvas{width:100%;height:auto;display:block}
 #bm-size figcaption{font:500 20cqw/1 Geist,Arial,sans-serif;letter-spacing:-.065em;text-align:center;margin-top:8px;white-space:nowrap}
 #bm-size .symbol{position:relative}
 #bm-size .symbol i{position:absolute;z-index:1;top:2.28%;left:48.29%;width:2.98%;height:97.72%;border-radius:999px;background:#ff681c}
-#bm-size .play canvas{animation:bm-reveal .5s ease 1.7s both}
-#bm-size .play .symbol i{animation:bm-bar .7s ease 1.7s both}
-#bm-size .play figcaption{animation:bm-show .25s ease 2.15s both}
 @keyframes bm-show{from{opacity:0}to{opacity:1}}
 #bm-size .trace{display:none;position:absolute;inset:0}
-#bm-size .play .trace{display:block;animation:bm-trace 1.55s linear 0s both}
-#bm-size .play canvas[role]{animation:bm-pulse .62s ease-in-out 1.18s both}
-#bm-size .play .symbol i{transform-origin:center 55%;animation:bm-grow .52s cubic-bezier(.22,.65,.28,1) .53s both}
-#bm-size .play figcaption{animation:bm-show .3s ease 1.80s both}
+#bm-size.play .trace{display:block;animation:bm-trace 1.55s linear 0s both}
+#bm-size.play canvas[role]{animation:bm-pulse .62s ease-in-out 1.18s both}
+#bm-size.play .symbol i{transform-origin:center 55%;animation:bm-grow .52s cubic-bezier(.22,.65,.28,1) .53s both}
+#bm-size.play figcaption{animation:bm-show .3s ease 1.80s both}
 
 @keyframes bm-grow{from{transform:scaleY(0);opacity:0}15%{opacity:1}70%{transform:scaleY(1.09);opacity:1}to{transform:scaleY(1);opacity:1}}
 #bm-size .tick{display:none;position:absolute;z-index:2;left:var(--x);top:56.3%;width:1.2%;height:24%;border-radius:999px;background:#ff681c;transform:translate(-50%,-50%)}
-#bm-size .play .tick{display:block;animation:bm-small-grow .34s ease-out var(--hit) both,bm-small-exit .28s ease 1.18s forwards}
+#bm-size.play .tick{display:block;animation:bm-small-grow .34s ease-out var(--hit) both,bm-small-exit .28s ease 1.18s forwards}
 @keyframes bm-small-grow{from{transform:translate(-50%,-50%) scaleY(0)}65%{transform:translate(-50%,-50%) scaleY(1.25)}to{transform:translate(-50%,-50%) scaleY(1)}}
 @keyframes bm-small-exit{from{opacity:1}to{opacity:0}}
 @keyframes bm-pulse{0%{opacity:0;transform:scale(1)}45%{opacity:1;transform:scale(1.13)}100%{opacity:1;transform:scale(1)}}
@@ -136,7 +99,7 @@ const trace=root.querySelector('.trace').getContext('2d');
 82%{clip-path:inset(0 0 0 0);opacity:1}
 100%{clip-path:inset(0 0 0 0);opacity:0}
 }
-@media(prefers-reduced-motion:reduce){#bm-size .play *{animation:none}}
+@media(prefers-reduced-motion:reduce){#bm-size.play *{animation:none}}
 </style>
 <section id="dl-screen" aria-label="Direct Layover homepage mockup">
 <header><div class="logo" role="img" aria-label="Direct Layover">direct<br><span class="indent">layover<span class="dot"></span></span></div><div class="projects"><button type="button" class="toggle" aria-expanded="false" aria-controls="dl-project">projects</button><span class="trail" aria-hidden="true"></span></div></header>
@@ -438,6 +401,7 @@ entrance();
 
 
 </body></html>
+
 
 
 
