@@ -91,7 +91,6 @@ to{opacity:1;transform:translate(0,0)}
 @keyframes bm-small-grow{from{transform:translate(-50%,-50%) scaleY(0)}65%{transform:translate(-50%,-50%) scaleY(1.25)}to{transform:translate(-50%,-50%) scaleY(1)}}
 @keyframes bm-small-exit{from{opacity:1}to{opacity:0}}
 @keyframes bm-pulse{0%{opacity:0;transform:scale(1)}45%{opacity:1;transform:scale(1.13)}100%{opacity:1;transform:scale(1)}}
-const trace=root.querySelector('.trace').getContext('2d');
 
 @keyframes bm-trace{
 0%{clip-path:inset(0 100% 0 0);opacity:1}
@@ -113,25 +112,12 @@ const root=document.getElementById('dl-screen');
 const labels=[root.querySelector('.toggle'),root.querySelector('.contact'),root.querySelector('.about')];
 const panels=[root.querySelector('.project'),null,root.querySelector('#dl-about')];
 const beat=root.querySelector('#bm-size');
-let horn;
-root.querySelector('.date').addEventListener('click',async()=>{
- horn ||= new AudioContext();
- await horn.resume();
- const time=horn.currentTime;
- const gain=horn.createGain();
- gain.gain.setValueAtTime(.0001,time);
- gain.gain.exponentialRampToValueAtTime(.11,time+.04);
- gain.gain.exponentialRampToValueAtTime(.0001,time+.34);
- gain.connect(horn.destination);
- for(const frequency of [385,510]){
-  const voice=horn.createOscillator();
-  voice.type='triangle';
-  voice.frequency.setValueAtTime(frequency,time);
-  voice.frequency.exponentialRampToValueAtTime(frequency*.87,time+.32);
-  voice.connect(gain);
-  voice.start(time);
-  voice.stop(time+.35);
- }
+const horn=new Audio('./bike-horn.mp3');
+horn.preload='auto';
+root.querySelector('.date').addEventListener('click',()=>{
+ if(!horn.paused) return;
+ horn.currentTime=0;
+ horn.play().catch(()=>{});
 });
 const trace=beat.querySelector('.trace').getContext('2d');
 trace.strokeStyle='#111';
@@ -401,6 +387,7 @@ entrance();
 
 
 </body></html>
+
 
 
 
