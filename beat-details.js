@@ -6,7 +6,34 @@
  const canvas=root.querySelector('.beat-letters');
  const motion=matchMedia('(prefers-reduced-motion: reduce)');
  let frame=0;
- let hiding;
+ let hiding,returning=false;
+ const invite=root.querySelector('.beat-invite');
+ const note=root.querySelector('.beat-invite-note');
+ invite.onclick=()=>{
+  note.hidden=!note.hidden;
+  invite.setAttribute('aria-expanded',String(!note.hidden));
+ };
+ async function closeDetails(event){
+  if(copy.hidden)return;
+  event.stopImmediatePropagation();
+  if(returning)return;
+  returning=true;
+  hiding?.cancel();
+  privateProject.hidden=false;
+  if(!motion.matches){
+   const fade=(node,from,to,duration)=>node.animate([{opacity:from},{opacity:to}],{duration,fill:'both'}).finished;
+   await Promise.all([fade(copy,1,0,540),fade(canvas,1,0,540),fade(privateProject,0,1,720)]);
+  }
+  copy.hidden=true;
+  stop();
+  for(const node of [copy,canvas,privateProject])node.getAnimations().forEach(animation=>animation.cancel());
+  note.hidden=true;
+  invite.setAttribute('aria-expanded','false');
+  returning=false;
+  trigger.focus({preventScroll:true});
+ }
+ root.querySelector('.return').addEventListener('click',closeDetails,true);
+ root.addEventListener('keydown',event=>{if(event.key==='Escape')void closeDetails(event);},true);
  function stop(){
   cancelAnimationFrame(frame);
   canvas.hidden=true;
@@ -17,7 +44,7 @@
   if(!copy.hidden)return;
   hiding?.cancel();
   if(!privateProject.hidden&&!motion.matches){
-   hiding=privateProject.animate([{opacity:1},{opacity:0}],{duration:350,fill:'forwards'});
+   hiding=privateProject.animate([{opacity:1},{opacity:0}],{duration:680,fill:'forwards'});
    hiding.finished.then(()=>{privateProject.hidden=true;hiding.cancel();}).catch(()=>{});
   }else privateProject.hidden=true;
   copy.hidden=false;
@@ -32,8 +59,9 @@
   ctx.fillStyle='#fff';
   ctx.textBaseline='alphabetic';
   const letters=[];
+  const edgeOffset=Math.floor(Math.random()*4);
   const range=document.createRange();
-  const total=3000+Math.random()*1500;
+  const total=4200+Math.random()*1300;
   for(const paragraph of copy.querySelectorAll('p')){
    const node=paragraph.firstChild;
    const style=getComputedStyle(paragraph);
@@ -47,10 +75,12 @@
     const rect=range.getBoundingClientRect();
     const x=rect.left-bounds.left;
     const y=rect.top-bounds.top+(rect.height-metrics.fontBoundingBoxAscent-metrics.fontBoundingBoxDescent)/2+metrics.fontBoundingBoxAscent;
-    const angle=Math.random()*Math.PI*2;
-    const distance=(.25+Math.random()*.8)*Math.max(bounds.width,bounds.height);
-    const duration=total*(.44+Math.random()*.53);
-    letters.push({char,font,x,y,dx:Math.cos(angle)*distance,dy:Math.sin(angle)*distance,delay:Math.random()*(total-duration),duration});
+    const side=(letters.length+edgeOffset)%4;
+    const extra=18+Math.random()*90;
+    const startX=side===0?-extra:side===1?bounds.width+extra:Math.random()*bounds.width;
+    const startY=side===2?-extra:side===3?bounds.height+extra:Math.random()*bounds.height;
+    const duration=total*(.50+Math.random()*.48);
+    letters.push({char,font,x,y,dx:startX-x,dy:startY-y,delay:Math.random()*(total-duration),duration});
    }
   }
   copy.classList.add('assembling');
@@ -77,3 +107,4 @@
   if(copy.hidden)trigger.setAttribute('aria-expanded','false');
  }).observe(copy,{attributes:true,attributeFilter:['hidden']});
 }
+
