@@ -1,4 +1,5 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Direct Layover</title><style>body{margin:0}html,body{overflow:hidden}#dl-screen#dl-screen{min-height:0;height:100dvh}</style></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600&display=swap">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Direct Layover</title><style>body{margin:0}html,body{overflow:hidden}#dl-screen#dl-screen{min-height:0;height:100dvh}#dl-screen .private-project{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;filter:invert(1);z-index:1}
+</style></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600&display=swap">
 <style>
 #dl-screen{min-height:clamp(390px,60vw,610px);box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:clamp(17px,5vw,52px);background:#f8f6f0;color:#000;font:500 16px Geist,Arial,sans-serif}
 #dl-screen header{display:flex;justify-content:space-between;align-items:start;gap:12px}
@@ -100,18 +101,20 @@ to{opacity:1;transform:translate(0,0)}
 100%{clip-path:inset(0 0 0 0);opacity:0}
 }
 @media(prefers-reduced-motion:reduce){#bm-size.play *{animation:none}}
+#dl-screen .private-project{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;filter:invert(1);z-index:1}
 </style>
 <section id="dl-screen" aria-label="Direct Layover homepage mockup">
 <header><div class="logo" role="img" aria-label="Direct Layover">direct<br><span class="indent">layover<span class="dot"></span></span></div><div class="projects"><button type="button" class="toggle" aria-expanded="false" aria-controls="dl-project">projects</button><span class="trail" aria-hidden="true"></span></div></header>
 <div class="content"><section class="project" id="dl-project" hidden><div id="bm-size"><figure><div class="symbol"><span class="tick" style="--x:14%;--hit:.15s;height:16%" aria-hidden="true"></span><span class="tick" style="--x:29%;--hit:.32s" aria-hidden="true"></span><span class="tick" style="--x:69%;--hit:.75s" aria-hidden="true"></span><canvas class="trace" width="905" height="570" aria-hidden="true"></canvas><i aria-hidden="true"></i><canvas role="img" aria-label="BeatMarker symbol in black with an orange bar"></canvas></div><figcaption>BeatMarker</figcaption></figure></div></section></div>
-<button class="about" type="button" aria-expanded="false" aria-controls="dl-about">about</button><section id="dl-about" hidden></section><button type="button" class="contact" aria-expanded="false">contact</button><footer><button class="date" type="button" aria-label="Sound the horn">est.<br><span class="indent">2026</span><span class="city">in en why sea</span></button></footer>
+<button class="about" type="button" aria-expanded="false" aria-controls="dl-about">about</button><section id="dl-about" hidden></section><button type="button" class="contact" aria-expanded="false">contact</button><iframe class="private-project" src="./private-label.html" title="Private Label" hidden></iframe><footer><button class="date" type="button" aria-label="Sound the horn">est.<br><span class="indent">2026</span><span class="city">in en why sea</span></button></footer>
 </section>
 <script>
 {
 const root=document.getElementById('dl-screen');
 
 const labels=[root.querySelector('.toggle'),root.querySelector('.contact'),root.querySelector('.about')];
-const panels=[root.querySelector('.project'),null,root.querySelector('#dl-about')];
+const privateProject=root.querySelector('.private-project');
+const panels=[root.querySelector('.project'),null,root.querySelector('#dl-about'),privateProject];
 const beat=root.querySelector('#bm-size');
 const horn=new Audio('./bike-horn.mp3');
 horn.preload='auto';
@@ -295,7 +298,18 @@ async function select(label,index){
   };
   beat.classList.remove('play');
   if(reduced.matches) reveal();
-  else setTimeout(reveal,Math.max(0,sweep.delay+sweep.duration-500));
+  const privateFirst=Math.random()<.5;
+  const start=Math.max(0,sweep.delay+sweep.duration-500);
+  const showPrivate=()=>{
+   if(active!==word || reversing) return;
+   privateProject.hidden=false;
+   privateProject.contentWindow.postMessage('play-private-label',location.origin);
+  };
+  if(reduced.matches) showPrivate();
+  else{
+   setTimeout(reveal,start+(privateFirst?190:0));
+   setTimeout(showPrivate,start+(privateFirst?0:190));
+  }
  }
  await Promise.all([motion.finished,dashMotion.finished,arrival.finished]).catch(()=>{});
  if(active!==word || reversing) return;
@@ -394,6 +408,7 @@ entrance();
 
 
 </body></html>
+
 
 
 
