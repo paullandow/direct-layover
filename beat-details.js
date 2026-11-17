@@ -19,14 +19,19 @@
   if(returning)return;
   returning=true;
   hiding?.cancel();
-  privateProject.hidden=false;
+  privateProject.hidden=true;
   if(!motion.matches){
-   const fade=(node,from,to,duration)=>node.animate([{opacity:from},{opacity:to}],{duration,fill:'both'}).finished;
-   await Promise.all([fade(copy,1,0,540),fade(canvas,1,0,540),fade(privateProject,0,1,720)]);
+   const fade=node=>node.animate([{opacity:1},{opacity:0}],{duration:760,fill:'both'}).finished;
+   await Promise.all([fade(copy),fade(canvas)]);
   }
   copy.hidden=true;
   stop();
   for(const node of [copy,canvas,privateProject])node.getAnimations().forEach(animation=>animation.cancel());
+  privateProject.hidden=false;
+  privateProject.contentWindow.postMessage('play-private-label',location.origin);
+  if(!motion.matches){
+   privateProject.animate([{opacity:0},{opacity:1}],{duration:980,easing:'ease-in-out'});
+  }
   note.hidden=true;
   invite.setAttribute('aria-expanded','false');
   returning=false;
@@ -40,11 +45,11 @@
   copy.classList.remove('assembling');
  }
  new MutationObserver(()=>{if(copy.hidden) stop();}).observe(copy,{attributes:true,attributeFilter:['hidden']});
- trigger.addEventListener('click',()=>{
-  if(!copy.hidden)return;
+ trigger.addEventListener('click',event=>{
+  if(!copy.hidden){void closeDetails(event);return;}
   hiding?.cancel();
   if(!privateProject.hidden&&!motion.matches){
-   hiding=privateProject.animate([{opacity:1},{opacity:0}],{duration:680,fill:'forwards'});
+   hiding=privateProject.animate([{opacity:1},{opacity:0}],{duration:1050,fill:'forwards'});
    hiding.finished.then(()=>{privateProject.hidden=true;hiding.cancel();}).catch(()=>{});
   }else privateProject.hidden=true;
   copy.hidden=false;
@@ -107,4 +112,5 @@
   if(copy.hidden)trigger.setAttribute('aria-expanded','false');
  }).observe(copy,{attributes:true,attributeFilter:['hidden']});
 }
+
 
