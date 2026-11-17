@@ -1,4 +1,15 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Direct Layover</title><style>body{margin:0}html,body{overflow:hidden}#dl-screen#dl-screen{min-height:0;height:100dvh}#dl-screen .private-project{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;filter:invert(1);z-index:1}
+#dl-screen .dot{position:relative;border:0;padding:0;cursor:pointer;font:inherit}
+#dl-screen .cue{position:absolute;right:50%;top:50%;width:clamp(90px,29vw,285px);height:13px;transform:translateY(-50%) rotate(var(--cue-angle,-9deg)) translateX(-.075em);transform-origin:right center;overflow:visible;visibility:hidden;opacity:0;pointer-events:none}
+#dl-screen .cue path{stroke:#fff}
+#dl-screen .baseline{display:inline-block;width:0;height:0;vertical-align:baseline}
+#dl-screen .target-i{display:inline-block}
+#dl-screen .ball,#dl-screen .i-ball{position:absolute;border-radius:50%;background:#fff;mix-blend-mode:difference;pointer-events:none}
+#dl-screen .ball{left:0;top:0}
+#dl-screen .i-ball{animation:dl-arrive 950ms ease-out 100ms both}
+#dl-screen.shooting .dot{visibility:hidden}
+#dl-screen.lining .cue{visibility:visible}
+@media(prefers-reduced-motion:reduce){#dl-screen .i-ball{animation:none}}
 </style></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600&display=swap">
 <style>
 #dl-screen{min-height:clamp(390px,60vw,610px);box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:clamp(17px,5vw,52px);background:#f8f6f0;color:#000;font:500 16px Geist,Arial,sans-serif}
@@ -104,7 +115,7 @@ to{opacity:1;transform:translate(0,0)}
 #dl-screen .private-project{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;filter:invert(1);z-index:1}
 </style>
 <section id="dl-screen" aria-label="Direct Layover homepage mockup">
-<header><div class="logo" role="img" aria-label="Direct Layover">direct<br><span class="indent">layover<span class="dot"></span></span></div><div class="projects"><button type="button" class="toggle" aria-expanded="false" aria-controls="dl-project">projects</button><span class="trail" aria-hidden="true"></span></div></header>
+<header><div class="logo">d<span class="target-i">i</span><span class="baseline"></span>rect<br><span class="indent">layover<button type="button" class="dot" aria-label="Play the pool shot"><svg class="cue" viewBox="0 0 285 13" preserveAspectRatio="none" role="img" aria-label="Thin black pool cue outline angled slightly upward toward the period"><path d="M 5 1.5 L 269 5 L 282 5.3 Q 285 5.4 285 6.5 Q 285 7.6 282 7.7 L 5 11.5 Q 1 11.5 1 8 L 1 5 Q 1 1.5 5 1.5 Z M 67 2.3 L 67 10.6 M 274 5.1 L 274 7.8" fill="none" stroke="black" stroke-width="1.25" vector-effect="non-scaling-stroke"/></svg></button></span></div><div class="projects"><button type="button" class="toggle" aria-expanded="false" aria-controls="dl-project">projects</button><span class="trail" aria-hidden="true"></span></div></header><span class="ball" aria-hidden="true" hidden></span><span class="i-ball" aria-hidden="true"></span>
 <div class="content"><section class="project" id="dl-project" hidden><div id="bm-size"><figure><div class="symbol"><span class="tick" style="--x:14%;--hit:.15s;height:16%" aria-hidden="true"></span><span class="tick" style="--x:29%;--hit:.32s" aria-hidden="true"></span><span class="tick" style="--x:69%;--hit:.75s" aria-hidden="true"></span><canvas class="trace" width="905" height="570" aria-hidden="true"></canvas><i aria-hidden="true"></i><canvas role="img" aria-label="BeatMarker symbol in black with an orange bar"></canvas></div><figcaption>BeatMarker</figcaption></figure></div></section></div>
 <button class="about" type="button" aria-expanded="false" aria-controls="dl-about">about</button><section id="dl-about" hidden></section><button type="button" class="contact" aria-expanded="false">contact</button><iframe class="private-project" src="./private-label.html?v=half-original" title="Private Label" hidden></iframe><footer><button class="date" type="button" aria-label="Sound the horn">est.<br><span class="indent">2026</span><span class="city">in en why sea</span></button></footer>
 </section>
@@ -408,7 +419,8 @@ entrance();
 
 
 
-</body></html>
+<script src="./pool-shot.js?v=1" defer></script></body></html>
+
 
 
 
