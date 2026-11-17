@@ -21,6 +21,7 @@
 #dl-screen .beat-invite{background:none;color:inherit;border:0;border-bottom:1px dashed currentColor;font:inherit;padding:0;margin-top:5px;cursor:pointer}
 #dl-screen .beat-copy.assembling .beat-invite{visibility:hidden}
 #dl-screen .beat-invite-note{font:inherit;margin-top:5px}
+#dl-screen .wordmark-sound{display:inline;margin:0;padding:0;border:0;background:none;color:inherit;font:inherit;letter-spacing:inherit;line-height:inherit;vertical-align:baseline;cursor:pointer}
 </style></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600&display=swap">
 <style>
 #dl-screen{min-height:clamp(390px,60vw,610px);box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:clamp(17px,5vw,52px);background:#f8f6f0;color:#000;font:500 16px Geist,Arial,sans-serif}
@@ -134,7 +135,7 @@ to{opacity:1;transform:translate(0,0)}
 @media(max-height:520px) and (min-width:681px){#dl-screen .beat-copy{top:16%;font-size:12px;line-height:1.25}}
 </style>
 <section id="dl-screen" aria-label="Direct Layover homepage mockup">
-<header><div class="logo">d<span class="target-i">i</span><span class="baseline"></span>rect<br><span class="indent">layover<button type="button" class="dot" aria-label="Play the pool shot"><svg class="cue" viewBox="0 0 285 13" preserveAspectRatio="none" role="img" aria-label="Thin black pool cue outline angled slightly upward toward the period"><path d="M 5 1.5 L 269 5 L 282 5.3 Q 285 5.4 285 6.5 Q 285 7.6 282 7.7 L 5 11.5 Q 1 11.5 1 8 L 1 5 Q 1 1.5 5 1.5 Z M 67 2.3 L 67 10.6 M 274 5.1 L 274 7.8" fill="none" stroke="black" stroke-width="1.25" vector-effect="non-scaling-stroke"/></svg></button></span></div><div class="projects"><button type="button" class="toggle" aria-expanded="false" aria-controls="dl-project">projects</button><span class="trail" aria-hidden="true"></span></div></header><span class="ball" aria-hidden="true" hidden></span><span class="i-ball" aria-hidden="true"></span>
+<header><div class="logo">d<span class="target-i">i</span><span class="baseline"></span>rect<br><span class="indent">lay<button type="button" class="wordmark-sound" aria-label="o, play Oh Boy">o</button>ver<button type="button" class="dot" aria-label="Play the pool shot"><svg class="cue" viewBox="0 0 285 13" preserveAspectRatio="none" role="img" aria-label="Thin black pool cue outline angled slightly upward toward the period"><path d="M 5 1.5 L 269 5 L 282 5.3 Q 285 5.4 285 6.5 Q 285 7.6 282 7.7 L 5 11.5 Q 1 11.5 1 8 L 1 5 Q 1 1.5 5 1.5 Z M 67 2.3 L 67 10.6 M 274 5.1 L 274 7.8" fill="none" stroke="black" stroke-width="1.25" vector-effect="non-scaling-stroke"/></svg></button></span></div><div class="projects"><button type="button" class="toggle" aria-expanded="false" aria-controls="dl-project">projects</button><span class="trail" aria-hidden="true"></span></div></header><span class="ball" aria-hidden="true" hidden></span><span class="i-ball" aria-hidden="true"></span>
 <div class="content"><section class="project" id="dl-project" hidden><div id="bm-size"><button type="button" class="beat-details" aria-label="Show BeatMarker description" aria-controls="beat-description" aria-expanded="false"><figure><div class="symbol"><span class="tick" style="--x:14%;--hit:.15s;height:16%" aria-hidden="true"></span><span class="tick" style="--x:29%;--hit:.32s" aria-hidden="true"></span><span class="tick" style="--x:69%;--hit:.75s" aria-hidden="true"></span><canvas class="trace" width="905" height="570" aria-hidden="true"></canvas><i aria-hidden="true"></i><canvas role="img" aria-label="BeatMarker symbol in black with an orange bar"></canvas></div><figcaption>BeatMarker</figcaption></figure></button></div></section></div>
 <button class="about" type="button" aria-expanded="false" aria-controls="dl-about">about</button><section id="dl-about" hidden></section><button type="button" class="contact" aria-expanded="false">contact</button><section id="beat-description" class="beat-copy" aria-label="About BeatMarker" hidden><p>A kick that lands. A snare that snaps. The split second a track goes quiet.</p><p>BeatMarker lets you see what you hear. Press play, mark the sounds that catch your ear, and fine-tune each cue down to the millisecond. If you can tap along, you can use BeatMarker.</p><p>Maybe you can already picture the angle changes, quick zooms, and cuts in your new music video and want to share that sequence with your editor. Or maybe your lighting designer’s flight was canceled, and you need to show them exactly where the show’s new cues land while they’re still on another continent. Lay out those moments on the timeline, then export your cues to supported software or share them as a timing guide. Everyone can see exactly when each change is meant to happen, so you spend less time going back and forth on “a little earlier” and more time making it work.</p><button type="button" class="beat-invite" aria-expanded="false" aria-controls="beat-invite-note">Have an invite code?</button><div id="beat-invite-note" class="beat-invite-note" hidden>Downloads coming soon.</div></section><canvas class="beat-letters" aria-hidden="true" hidden></canvas><iframe class="private-project" src="./private-label.html?v=half-original" title="Private Label" hidden></iframe><footer><button class="date" type="button" aria-label="Sound the horn">est.<br><span class="indent">2026</span><span class="city">in en why sea</span></button></footer>
 </section>
@@ -438,7 +439,18 @@ entrance();
 
 
 
-<script src="./pool-shot.js?v=1" defer></script><script src="./beat-details.js?v=3" defer></script></body></html>
+<script src="./pool-shot.js?v=1" defer></script><script src="./beat-details.js?v=3" defer></script><script>
+{
+ const button=document.querySelector('.wordmark-sound');
+ const clip=new Audio('./oh-boy.mp3');
+ clip.preload='none';
+ button.addEventListener('click',()=>{
+  clip.currentTime=0;
+  clip.play().catch(()=>{});
+ });
+}
+</script></body></html>
+
 
 
 
