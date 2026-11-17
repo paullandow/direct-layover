@@ -72,7 +72,7 @@ to{opacity:1;transform:translate(0,0)}
 
 #dl-screen{padding-bottom:8px}
 #dl-screen .date{border:0;background:none;color:inherit;font:inherit;text-align:left;line-height:.94;cursor:pointer;padding:4px}
-#dl-screen .project{position:absolute;left:7.5%;top:var(--project-top,40%);width:min(250px,61vw,34dvh);min-width:0;padding:0;background:none;color:#000;animation:none}
+#dl-screen .project{position:absolute;left:7.5%;top:var(--project-top,40%);width:min(250px,61vw,var(--project-width,34dvh));min-width:0;padding:0;background:none;color:#000;animation:none}
 #bm-size figure{width:100%;margin:0;container-type:inline-size}
 #bm-size canvas{width:100%;height:auto;display:block}
 #bm-size figcaption{font:500 20cqw/1 Geist,Arial,sans-serif;letter-spacing:-.065em;text-align:center;margin-top:8px;white-space:nowrap}
@@ -289,7 +289,11 @@ async function select(label,index){
  if(index===0){
   const reveal=()=>{
    if(active!==word || reversing) return;
-   panels[0].style.setProperty('--project-top',Math.min(inkBottom+45,bounds.height*.53)+'px');
+   const projectTop=inkBottom+48;
+   const footerTop=root.querySelector('footer').getBoundingClientRect().top-bounds.top;
+   const availableHeight=Math.max(0,footerTop-projectTop-12);
+   panels[0].style.setProperty('--project-top',projectTop+'px');
+   panels[0].style.setProperty('--project-width',(availableHeight/0.94)+'px');
    beat.classList.toggle('play',!reduced.matches);
    panels[0].hidden=false;
   };
@@ -387,6 +391,7 @@ entrance();
 
 
 </body></html>
+
 
 
 
