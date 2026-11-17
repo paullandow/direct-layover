@@ -332,9 +332,10 @@ async function rewind(){
    fade.cancel();
   }).catch(()=>{});
  });
+ let arrowExit=Promise.resolve();
  if(!back.hidden && !reduced.matches){
   back.getAnimations().forEach(animation=>animation.cancel());
-  await back.animate(
+  arrowExit=back.animate(
    [{transform:'translateX(0)',opacity:1},{transform:'translateX(-72px)',opacity:0}],
    {duration:1100,easing:'cubic-bezier(.72,0,.78,.35)',fill:'forwards'}
   ).finished.catch(()=>{});
@@ -369,7 +370,7 @@ async function rewind(){
     {opacity:1,transform:'translate(0,0)'}
    ],{duration,easing:'cubic-bezier(.24,.66,.31,1)',fill:'both'});
   });
-  await Promise.all([...exits,...arrivals.map(animation=>animation.finished.catch(()=>{}))]);
+  await Promise.all([arrowExit,...exits,...arrivals.map(animation=>animation.finished.catch(()=>{}))]);
   if(active!==current) return;
   const originalTransition=label.style.transition;
   label.style.transition='none';
@@ -408,6 +409,7 @@ entrance();
 
 
 </body></html>
+
 
 
 
