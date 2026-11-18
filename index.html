@@ -27,6 +27,9 @@
 #dl-screen #bm-size .wordmark{display:block;width:100%;height:auto;margin-top:6px}
 #dl-screen .letter-assembling{color:transparent!important}
 #dl-screen .beat-copy.assembling .beat-invite{visibility:visible;border-color:transparent;pointer-events:none}
+#dl-screen .beat-invite{border-bottom:0;position:relative;padding-bottom:5px}
+#dl-screen .beat-invite::after{content:"";position:absolute;bottom:0;left:0;width:100%;border-top:1px dashed currentColor}
+#dl-screen .beat-invite.letter-assembling::after{visibility:hidden}
 </style><link rel="icon" type="image/svg+xml" href="./favicon.svg?v=dl1"><link rel="icon" type="image/png" sizes="64x64" href="./favicon.png?v=dl1"><link rel="shortcut icon" href="./favicon.ico?v=dl1"></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600&display=swap">
 <style>
 #dl-screen{min-height:clamp(390px,60vw,610px);box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:clamp(17px,5vw,52px);background:#f8f6f0;color:#000;font:500 16px Geist,Arial,sans-serif}
@@ -348,8 +351,8 @@ async function select(label,index){
   };
   if(reduced.matches) showPrivate();
   else{
-   setTimeout(reveal,start+(privateFirst?190:0));
-   setTimeout(showPrivate,start+(privateFirst?0:190));
+   setTimeout(reveal,start+(privateFirst?1944:0));
+   setTimeout(showPrivate,start+(privateFirst?0:2466));
   }
  }
  await Promise.all([motion.finished,dashMotion.finished,arrival.finished]).catch(()=>{});
@@ -449,7 +452,8 @@ entrance();
 
 
 
-<script src="./pool-shot.js?v=2" defer></script><script src="./beat-details.js?v=slower-description" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script></body></html>
+<script src="./pool-shot.js?v=2" defer></script><script src="./beat-details.js?v=sequential-fast" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script></body></html>
+
 
 
 

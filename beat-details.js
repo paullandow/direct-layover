@@ -75,7 +75,7 @@
   const letters=[];
   const edgeOffset=Math.floor(Math.random()*4);
   const range=document.createRange();
-  const total=fast?(4200+Math.random()*1300)/3:4200+Math.random()*1300;
+  const total=(fast?(4200+Math.random()*1300)/3:4200+Math.random()*1300)/2;
   for(const paragraph of elements){
    const node=paragraph.firstChild;
    const style=getComputedStyle(paragraph);
@@ -97,6 +97,19 @@
     letters.push({char,font,x,y,dx:startX-x,dy:startY-y,delay:Math.random()*(total-duration),duration});
    }
   }
+  if(elements.includes(invite)){
+   const rect=invite.getBoundingClientRect();
+   const count=Math.max(3,Math.floor(rect.width/12));
+   for(let i=0;i<count;i++){
+    const x=rect.left-bounds.left+i*rect.width/count;
+    const y=rect.bottom-bounds.top-1;
+    const side=i%4;
+    const startX=side===0?-30:side===1?bounds.width+30:Math.random()*bounds.width;
+    const startY=side===2?-30:side===3?bounds.height+30:Math.random()*bounds.height;
+    const duration=total*(.85+Math.random()*.13);
+    letters.push({char:'dash',font:'',x,y,dx:startX-x,dy:startY-y,delay:Math.random()*(total-duration),duration});
+   }
+  }
   animated=elements;
   if(elements.includes(invite))copy.classList.add('assembling');
   elements.forEach(element=>element.classList.add('letter-assembling'));
@@ -112,8 +125,12 @@
     if(elapsed<letter.delay)continue;
     const progress=Math.min(1,(elapsed-letter.delay)/letter.duration);
     const remaining=(1-progress)**2.35;
-    ctx.font=letter.font;
-    ctx.fillText(letter.char,letter.x+letter.dx*remaining,letter.y+letter.dy*remaining);
+    if(letter.char==='dash'){
+     ctx.fillRect(letter.x+letter.dx*remaining,letter.y+letter.dy*remaining,6,1);
+    }else{
+     ctx.font=letter.font;
+     ctx.fillText(letter.char,letter.x+letter.dx*remaining,letter.y+letter.dy*remaining);
+    }
    }
    frame=requestAnimationFrame(draw);
   }
@@ -123,6 +140,7 @@
   if(copy.hidden)trigger.setAttribute('aria-expanded','false');
  }).observe(copy,{attributes:true,attributeFilter:['hidden']});
 }
+
 
 
 
