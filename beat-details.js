@@ -56,6 +56,7 @@
   if(!motion.matches){
    privateProject.animate([{opacity:0},{opacity:1}],{duration:980,easing:'ease-in-out'});
   }
+  copy.querySelector('.app-description').open=false;
   note.hidden=true;
   invite.setAttribute('aria-expanded','false');
   returning=false;
@@ -81,7 +82,7 @@
   copy.hidden=false;
   trigger.setAttribute('aria-expanded','true');
   if(motion.matches)return;
-  assemble([...copy.querySelectorAll('p'),invite]);
+  assemble([...copy.querySelectorAll(':scope > p, :scope > h2'),invite]);
  });
  function assemble(elements,fast=false){
   const bounds=root.getBoundingClientRect();
@@ -160,6 +161,7 @@
   if(copy.hidden)trigger.setAttribute('aria-expanded','false');
  }).observe(copy,{attributes:true,attributeFilter:['hidden']});
 }
+
 
 
 
