@@ -72,7 +72,7 @@ function reveal(){
   const finalScale=scale*(.82+i*.04);
   node.style.width=crop[2]*finalScale+'px';
   stage.append(node);
-  const result={node,dx:advance+43*fit+3,dy:(i>=6?-38-5*8+28-(i-6)*2.5:-38-i*8)*fit+5,delay:i*67};
+  const result={node,dx:advance+46*fit,dy:(i>=6?-38-5*8+28-(i-6)*2.5:-38-i*8)*fit+5*fit,delay:i*67};
   advance+=crop[2]*finalScale*.92;
   return result;
  });
@@ -94,3 +94,4 @@ function reveal(){
 }
 
 }
+
