@@ -43,16 +43,33 @@ function aim(){
  oldDot.style.width=oldDot.style.height=2*dotRadius+'px';
  oldDot.style.left=(target.x-dotRadius)+'px';
  oldDot.style.top=(target.y-dotRadius)+'px';
- const rail=bounds.width-radius;
- const reflectedX=2*rail-target.x;
- const angle=Math.atan2(target.y-start.y,reflectedX-start.x);
- const bankY=start.y+(rail-start.x)*Math.tan(angle);
- const bank={x:rail,y:bankY};
+ const width=bounds.width-2*radius,height=bounds.height-2*radius;
+ const local={x:start.x-radius,y:start.y-radius};
+ const goal={x:target.x-radius,y:target.y-radius};
+ const candidates=[];
+ for(let tx=-3;tx<=3;tx++)for(let ty=-3;ty<=3;ty++){
+  if(tx===0&&ty===0)continue;
+  const image={x:tx*width+(Math.abs(tx)%2?width-goal.x:goal.x),y:ty*height+(Math.abs(ty)%2?height-goal.y:goal.y)};
+  const dx=image.x-local.x,dy=image.y-local.y;
+  const hits=[];
+  for(let k=-4;k<=4;k++){
+   if(dx){const t=(k*width-local.x)/dx;if(t>0&&t<1)hits.push({t,axis:'x'});}
+   if(dy){const t=(k*height-local.y)/dy;if(t>0&&t<1)hits.push({t,axis:'y'});}
+  }
+  hits.sort((a,b)=>a.t-b.t);
+  if(hits.length<1||hits.length>4||hits.some((hit,i)=>i&&hit.t-hits[i-1].t<.015))continue;
+  const fold=(value,span)=>{const phase=((value%(2*span))+2*span)%(2*span);return phase>span?2*span-phase:phase;};
+  const banks=hits.map(hit=>({x:radius+fold(local.x+dx*hit.t,width),y:radius+fold(local.y+dy*hit.t,height)}));
+  candidates.push({banks,angle:Math.atan2(dy,dx)});
+ }
+ const route=candidates[Math.floor(Math.random()*candidates.length)];
+ const bank=route.banks.at(-1);
  const distance=Math.hypot(target.x-bank.x,target.y-bank.y);
  const direction={x:(target.x-bank.x)/distance,y:(target.y-bank.y)/distance};
  const impact={x:target.x-direction.x*(radius+dotRadius),y:target.y-direction.y*(radius+dotRadius)};
- dot.style.setProperty('--cue-angle',angle+'rad');
- shot={start,target,bank,impact,direction,radius,dotRadius};
+ dot.style.setProperty('--cue-angle',route.angle+'rad');
+ shot={start,target,bank,banks:route.banks,impact,direction,radius,dotRadius};
+
 }
 const moving=document.querySelector('.ball');
 const cue=document.querySelector('.cue');
@@ -62,7 +79,7 @@ dot.addEventListener('click',async()=>{
  if(busy||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
  busy=true;
  aim();
- const {start,target,bank,impact:contact,direction,radius,dotRadius}=shot;
+ const {start,target,bank,banks,impact:contact,direction,radius,dotRadius}=shot;
  const position=point=>'translate('+(point.x-radius)+'px,'+(point.y-radius)+'px)';
  const cueAt=offset=>'translateY(-50%) rotate(var(--cue-angle)) translateX(calc(-.075em - '+offset+'px))';
  const play=(index,volume)=>{
@@ -105,10 +122,17 @@ dot.addEventListener('click',async()=>{
   moving.style.width=moving.style.height=2*radius+'px';
   moving.hidden=false;
   stage.classList.add('shooting');
-  const bankTime=Math.min(430,Math.max(190,Math.hypot(bank.x-start.x,bank.y-start.y)/2.4));
-  const outbound=moving.animate([{transform:position(start)},{transform:position(bank)}],{duration:bankTime,easing:'linear',fill:'forwards'});
-  await outbound.finished;
-  void impact(1,.72);
+  let previous=start;
+  for(let index=0;index<banks.length;index++){
+   const next=banks[index];
+   const distance=Math.hypot(next.x-previous.x,next.y-previous.y);
+   const duration=Math.max(100,distance/(2.7-index*.35));
+   await moving.animate([{transform:position(previous)},{transform:position(next)}],{duration,easing:'linear',fill:'forwards'}).finished;
+   void impact(1,Math.max(.4,.76-index*.09));
+   previous=next;
+  }
+  moving.getAnimations().forEach(animation=>animation.cancel());
+  moving.style.transform=position(bank);
   let roll;
   const distance=Math.hypot(target.x-bank.x,target.y-bank.y);
   const touch=Math.hypot(contact.x-bank.x,contact.y-bank.y)/distance;
@@ -142,7 +166,7 @@ dot.addEventListener('click',async()=>{
     const y=bank.y+(target.y-bank.y)*travel;
     moving.style.width=moving.style.height=2*size+'px';
     moving.style.transform='translate('+(x-size)+'px,'+(y-size)+'px)';
-    outbound.cancel();
+
     if(t<1) requestAnimationFrame(rollFrame);
     else resolve();
    }
@@ -167,3 +191,4 @@ document.fonts.ready.then(aim);
 aim();
 
 }
+
