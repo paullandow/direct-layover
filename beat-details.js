@@ -15,7 +15,7 @@
   stop();
   note.hidden=false;
   invite.setAttribute('aria-expanded','true');
-  if(!motion.matches)assemble([note]);
+  if(!motion.matches)assemble([note],true);
  };
  async function closeDetails(event){
   if(copy.hidden)return;
@@ -63,7 +63,7 @@
   if(motion.matches)return;
   assemble([...copy.querySelectorAll('p'),invite]);
  });
- function assemble(elements){
+ function assemble(elements,fast=false){
   const bounds=root.getBoundingClientRect();
   const ctx=canvas.getContext('2d');
   const ratio=Math.min(devicePixelRatio||1,2);
@@ -75,7 +75,7 @@
   const letters=[];
   const edgeOffset=Math.floor(Math.random()*4);
   const range=document.createRange();
-  const total=(4200+Math.random()*1300)/(elements.length===1 && elements[0]===note?3:1);
+  const total=fast?(4200+Math.random()*1300)/3:4200+Math.random()*1300;
   for(const paragraph of elements){
    const node=paragraph.firstChild;
    const style=getComputedStyle(paragraph);
@@ -93,7 +93,7 @@
     const extra=18+Math.random()*90;
     const startX=side===0?-extra:side===1?bounds.width+extra:Math.random()*bounds.width;
     const startY=side===2?-extra:side===3?bounds.height+extra:Math.random()*bounds.height;
-    const duration=total*(.50+Math.random()*.48);
+    const duration=total*(fast?(.50+Math.random()*.48):(.85+Math.random()*.13));
     letters.push({char,font,x,y,dx:startX-x,dy:startY-y,delay:Math.random()*(total-duration),duration});
    }
   }
@@ -123,6 +123,7 @@
   if(copy.hidden)trigger.setAttribute('aria-expanded','false');
  }).observe(copy,{attributes:true,attributeFilter:['hidden']});
 }
+
 
 
 
