@@ -15,7 +15,27 @@
   stop();
   note.hidden=false;
   invite.setAttribute('aria-expanded','true');
-  if(!motion.matches)assemble([note],true);
+  note.getAnimations().forEach(animation=>animation.cancel());
+  if(!motion.matches){
+   note.replaceChildren(...Array.from('Downloads coming soon!',character=>{
+    const letter=document.createElement('span');
+    letter.textContent=character;
+    letter.style.display=character===' '?'inline':'inline-block';
+    if(character!==' '){
+     const flicker=[
+      {opacity:0,transform:'translateY(1px)'},
+      {opacity:.72,offset:.19},
+      {opacity:.1,offset:.31},
+      {opacity:.95,offset:.44,transform:'translateY(-1px)'},
+      {opacity:.3,offset:.53},
+      {opacity:.85,offset:.7},
+      {opacity:1,transform:'translateY(0)'}
+     ];
+     letter.animate(flicker,{duration:410+Math.random()*190,delay:Math.random()*230,fill:'both',easing:'linear'});
+    }
+    return letter;
+   }));
+  }
  };
  async function closeDetails(event){
   if(copy.hidden)return;
@@ -140,6 +160,7 @@
   if(copy.hidden)trigger.setAttribute('aria-expanded','false');
  }).observe(copy,{attributes:true,attributeFilter:['hidden']});
 }
+
 
 
 
