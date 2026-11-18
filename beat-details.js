@@ -6,12 +6,16 @@
  const canvas=root.querySelector('.beat-letters');
  const motion=matchMedia('(prefers-reduced-motion: reduce)');
  let frame=0;
+ let animated=[];
  let hiding,returning=false;
  const invite=root.querySelector('.beat-invite');
  const note=root.querySelector('.beat-invite-note');
  invite.onclick=()=>{
-  note.hidden=!note.hidden;
-  invite.setAttribute('aria-expanded',String(!note.hidden));
+  if(copy.classList.contains('assembling') || returning)return;
+  stop();
+  note.hidden=false;
+  invite.setAttribute('aria-expanded','true');
+  if(!motion.matches)assemble([note]);
  };
  async function closeDetails(event){
   if(copy.hidden)return;
@@ -43,6 +47,8 @@
   cancelAnimationFrame(frame);
   canvas.hidden=true;
   copy.classList.remove('assembling');
+  animated.forEach(element=>element.classList.remove('letter-assembling'));
+  animated=[];
  }
  new MutationObserver(()=>{if(copy.hidden) stop();}).observe(copy,{attributes:true,attributeFilter:['hidden']});
  trigger.addEventListener('click',event=>{
@@ -55,6 +61,9 @@
   copy.hidden=false;
   trigger.setAttribute('aria-expanded','true');
   if(motion.matches)return;
+  assemble([...copy.querySelectorAll('p'),invite]);
+ });
+ function assemble(elements){
   const bounds=root.getBoundingClientRect();
   const ctx=canvas.getContext('2d');
   const ratio=Math.min(devicePixelRatio||1,2);
@@ -67,7 +76,7 @@
   const edgeOffset=Math.floor(Math.random()*4);
   const range=document.createRange();
   const total=4200+Math.random()*1300;
-  for(const paragraph of copy.querySelectorAll('p')){
+  for(const paragraph of elements){
    const node=paragraph.firstChild;
    const style=getComputedStyle(paragraph);
    const font=style.fontWeight+' '+style.fontSize+' '+style.fontFamily;
@@ -88,7 +97,9 @@
     letters.push({char,font,x,y,dx:startX-x,dy:startY-y,delay:Math.random()*(total-duration),duration});
    }
   }
-  copy.classList.add('assembling');
+  animated=elements;
+  if(elements.includes(invite))copy.classList.add('assembling');
+  elements.forEach(element=>element.classList.add('letter-assembling'));
   canvas.hidden=false;
   const started=performance.now();
   function draw(now){
@@ -107,10 +118,11 @@
    frame=requestAnimationFrame(draw);
   }
   frame=requestAnimationFrame(draw);
- });
+ }
  new MutationObserver(()=>{
   if(copy.hidden)trigger.setAttribute('aria-expanded','false');
  }).observe(copy,{attributes:true,attributeFilter:['hidden']});
 }
+
 
 
