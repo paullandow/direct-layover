@@ -75,7 +75,7 @@
   const letters=[];
   const edgeOffset=Math.floor(Math.random()*4);
   const range=document.createRange();
-  const total=4200+Math.random()*1300;
+  const total=(4200+Math.random()*1300)/(elements.length===1 && elements[0]===note?3:1);
   for(const paragraph of elements){
    const node=paragraph.firstChild;
    const style=getComputedStyle(paragraph);
@@ -123,6 +123,7 @@
   if(copy.hidden)trigger.setAttribute('aria-expanded','false');
  }).observe(copy,{attributes:true,attributeFilter:['hidden']});
 }
+
 
 
 
