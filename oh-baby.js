@@ -67,7 +67,7 @@ function reveal(){
  const id=run;
  const started=performance.now();
  const pieces=crops.map((crop,i)=>{
-  if(i===2)advance+=12*fit;
+  if(i===2)advance+=8*fit;
   const node=document.createElement('img');node.className='oh-baby-letter';node.src=assets[i];
   const finalScale=scale*(.82+i*.04);
   node.style.width=crop[2]*finalScale+'px';
@@ -94,4 +94,5 @@ function reveal(){
 }
 
 }
+
 
