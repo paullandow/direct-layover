@@ -7,6 +7,7 @@ const baseline=document.querySelector('.baseline');
 let shot;
 const oldDot=document.querySelector(".i-ball");
 function aim(){
+ if(stage.classList.contains('shooting')||stage.classList.contains('lining'))return;
  const bounds=stage.getBoundingClientRect();
  const ball=dot.getBoundingClientRect();
  const glyph=letter.getBoundingClientRect();
@@ -15,15 +16,17 @@ function aim(){
  const style=getComputedStyle(letter);
  const sample=document.createElement('canvas');
  const size=parseFloat(style.fontSize);
- sample.width=Math.ceil(size*2);
- sample.height=Math.ceil(size*2);
+ const precision=8;
+ sample.width=Math.ceil(size*2*precision);
+ sample.height=Math.ceil(size*2*precision);
  const ctx=sample.getContext('2d');
+ ctx.scale(precision,precision);
  ctx.font=style.fontWeight+' '+style.fontSize+' '+style.fontFamily;
- const inkBaseline=Math.ceil(size*1.25);
+ const inkBaseline=size*1.25;
  ctx.fillText('i',0,inkBaseline);
  const {data}=ctx.getImageData(0,0,sample.width,sample.height);
  let x1=sample.width,x2=0,y1=sample.height,y2=0;
- for(let y=0;y<inkBaseline;y++){
+ for(let y=0;y<inkBaseline*precision;y++){
   let row=false;
   for(let x=0;x<sample.width;x++){
    if(data[(y*sample.width+x)*4+3]<100) continue;
@@ -33,12 +36,13 @@ function aim(){
   if(row){y1=Math.min(y1,y);y2=y;}
   else if(y2>0) break;
  }
+ const left=x1/precision,right=(x2+1)/precision,top=y1/precision,bottom=(y2+1)/precision;
  const target={
-  x:glyph.left-bounds.left+(x1+x2)/2,
-  y:baseline.getBoundingClientRect().top-bounds.top-inkBaseline+(y1+y2)/2
+  x:glyph.left-bounds.left+(left+right)/2,
+  y:baseline.getBoundingClientRect().top-bounds.top-inkBaseline+(top+bottom)/2
  };
- const dotRadius=(x2-x1+1)/2;
- const clipBottom=baseline.getBoundingClientRect().top-inkBaseline+y2+1;
+ const dotRadius=(right-left)/2;
+ const clipBottom=baseline.getBoundingClientRect().top-inkBaseline+bottom;
  letter.style.clipPath='inset('+Math.max(0,clipBottom-glyph.top)+'px -2px -3px -2px)';
  oldDot.style.width=oldDot.style.height=2*dotRadius+'px';
  oldDot.style.left=(target.x-dotRadius)+'px';
@@ -183,6 +187,7 @@ dot.addEventListener('click',async()=>{
   stage.classList.remove('shooting','lining');
   dot.animate([{opacity:0},{opacity:1}],{duration:220,easing:'ease-out'});
   busy=false;
+  aim();
   if(audioContext) setTimeout(()=>void audioContext.close(),250);
  }
 });
