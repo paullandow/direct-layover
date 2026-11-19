@@ -200,14 +200,31 @@ function revealCuePlacer(){
  run(glow,[{strokeDashoffset:length,opacity:0},{strokeDashoffset:0,opacity:0}],1300,0,'linear');
  bar.style.transformBox='fill-box';bar.style.transformOrigin='50% 56%';
  run(bar,[{transform:'scaleY(0)',opacity:0},{transform:'scaleY(1.06)',opacity:1,offset:.72},{transform:'scaleY(1)',opacity:1}],650,630,'cubic-bezier(.22,.65,.28,1)');
- run(wave,[{stroke:'#121820'},{stroke:'#fff',offset:.32},{stroke:'#fff',offset:.65},{stroke:'#121820'}],1100,980);
- run(glow,[{opacity:0},{opacity:.9,offset:.35},{opacity:0}],1100,980);
+ const svg=beat.querySelector('svg.symbol'),ns='http://www.w3.org/2000/svg';
+ let flash=svg.querySelector('.center-flash');
+ if(!flash){
+  const make=(name,attrs)=>{const node=document.createElementNS(ns,name);for(const [key,value]of Object.entries(attrs))node.setAttribute(key,String(value));return node};
+  const bounds=bar.getBBox(),x=bounds.x+bounds.width/2,y=bounds.y+bounds.height/2,defs=svg.querySelector('defs');
+  const gradient=make('radialGradient',{id:'cp-center-light',gradientUnits:'userSpaceOnUse',cx:x,cy:y,r:310});
+  for(const [offset,opacity]of [['0%',1],['16%',1],['58%',.62],['100%',.08]])gradient.append(make('stop',{offset,'stop-color':'#fff','stop-opacity':opacity}));defs.append(gradient);
+  const mask=make('mask',{id:'cp-center-reveal',maskUnits:'userSpaceOnUse',x:-50,y:-80,width:640,height:640});
+  mask.append(make('circle',{class:'center-flash-radius',cx:x,cy:y,r:0,fill:'#fff',filter:'url(#glow)'}));defs.append(mask);
+  flash=make('g',{class:'center-flash',mask:'url(#cp-center-reveal)',opacity:0,'pointer-events':'none'});
+  flash.append(make('path',{d:wave.getAttribute('d'),fill:'none',stroke:'url(#cp-center-light)','stroke-width':25,'stroke-linecap':'round','stroke-linejoin':'round',filter:'url(#glow)'}));
+  flash.append(make('path',{d:wave.getAttribute('d'),fill:'none',stroke:'url(#cp-center-light)','stroke-width':5.5,'stroke-linecap':'round','stroke-linejoin':'round'}));
+  flash.append(make('ellipse',{class:'center-flash-hotspot',cx:x,cy:y,rx:15,ry:21,fill:'#fff',filter:'url(#glow)'}));svg.append(flash);
+ }
+ const radius=svg.querySelector('.center-flash-radius');
+ run(radius,[{r:'0px'},{r:'340px'}],1700,980,'cubic-bezier(.22,.65,.28,1)');
+ run(flash,[{opacity:0},{opacity:1,offset:.18},{opacity:1,offset:.48},{opacity:0}],1700,980);
+ run(svg.querySelector('.center-flash-hotspot'),[{opacity:0},{opacity:1,offset:.2},{opacity:.9,offset:.48},{opacity:0}],1700,980);
+
  c.querySelectorAll('path').forEach((path,i)=>{
   path.style.transformBox='fill-box';path.style.transformBox='view-box';
   path.style.transformOrigin='250.5px 260px';
   run(path,[{opacity:0,transform:'scaleX(.07)'},{opacity:1,transform:'scaleX(1)'}],1000,1260,'cubic-bezier(.22,.65,.28,1)');
  });
- run(wave,[{opacity:1},{opacity:0}],110,1145);
+ run(wave,[{opacity:1},{opacity:0}],110,1405);
 
  run(name,[{opacity:0},{opacity:1}],1100,1890,'ease-out');
 }
