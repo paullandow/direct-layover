@@ -1,0 +1,47 @@
+/* Approved project detail layout. Colors are isolated from the site's inversion layer. */
+#dl-screen .beat-copy{position:absolute;left:29%;top:20%;width:61%;max-width:none;height:64%;display:grid;grid-template-columns:max-content minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);column-gap:10px;z-index:3;filter:invert(1);color:#52585d;font:400 16px/1.55 Geist,Arial,sans-serif;visibility:hidden}
+#dl-screen .beat-copy[hidden],#dl-screen .beat-copy .panel[hidden]{display:none!important}
+#dl-screen .beat-copy .topics{grid-column:1/-1;grid-row:1;color:#ff8000;font:400 clamp(14px,1.36vw,20px)/1.55 'Instrument Sans',Arial,sans-serif;margin:0 0 15px;letter-spacing:0}
+#dl-screen .beat-copy .topics>span{display:block;white-space:nowrap}
+#dl-screen .beat-copy .cue-separator{display:inline-block;width:2px;height:.94em;margin:0 .25em;vertical-align:-.11em;border-radius:999px;background:#ff8000}
+#dl-screen .beat-copy .topic-baseline{display:inline-block;width:0;height:0;margin:0;padding:0}
+#dl-screen .beat-copy .tabs{grid-column:1;grid-row:2;width:max-content;display:flex;flex-direction:column;gap:8px;align-items:stretch;margin:0;padding:0}
+#dl-screen .beat-copy .tabs button,#dl-screen .beat-copy .visit-site{display:grid;grid-template-columns:minmax(0,1fr) .65em;gap:10px;align-items:baseline;justify-content:normal;width:100%;margin:0;padding:0;border:0;background:none;cursor:pointer;color:#666d72;font:400 clamp(14px,1.22vw,18px)/1.45 Geist,Arial,sans-serif;letter-spacing:-.025em;text-decoration:none;text-align:left;white-space:nowrap}
+#dl-screen .beat-copy .section-label{display:block;white-space:nowrap}
+#dl-screen .beat-copy .tabs b{justify-self:end;align-self:baseline;line-height:inherit;font-size:1.12em;font-weight:400;color:#8b9093;margin:0;transform:none}
+#dl-screen .beat-copy .tabs button[aria-selected=true] b,#dl-screen .beat-copy .visit-site:hover b{color:#ff8000}
+#dl-screen .beat-copy .tabs button:focus-visible,#dl-screen .beat-copy .visit-site:focus-visible{outline:1px solid #ff8000;outline-offset:4px}
+#dl-screen .beat-copy .viewport{grid-column:2;grid-row:2;position:relative;min-height:0;max-height:none;border-left:1px solid #ff8000;overflow:visible}
+#dl-screen .beat-copy .panel{position:absolute;inset:35px 0 39px 14px;overflow:auto;overscroll-behavior:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:0 3px 14px 0;color:#646a6e;font:400 clamp(14px,1.16vw,17px)/1.6 Geist,Arial,sans-serif;letter-spacing:0}
+#dl-screen .beat-copy .panel::-webkit-scrollbar{display:none}
+#dl-screen .beat-copy .panel p{margin:0 0 16px}
+#dl-screen .beat-copy .panel p:first-child{color:#3b4246}
+#dl-screen .beat-copy .panel:focus-visible{outline:1px solid #ff8000;outline-offset:-1px}
+#dl-screen .beat-copy .paper-strip{position:absolute;top:0;pointer-events:none;will-change:transform;z-index:3}
+#dl-screen .beat-copy .paper-window{position:relative;overflow:hidden;flex:none;background:#f8f6f0}
+#dl-screen .beat-copy .paper-window .panel{inset:0!important;height:100%;width:100%;padding-right:3px;overflow:hidden!important}
+#dl-screen .beat-copy .paper-gap{background:#f8f6f0}
+#dl-screen .beat-copy .scroll-cue{position:absolute;left:14px;right:0;height:32px;display:flex;align-items:center;justify-content:center;z-index:5;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .28s ease,visibility .28s}
+#dl-screen .beat-copy .scroll-cue.up{top:0}
+#dl-screen .beat-copy .scroll-cue.down{bottom:0}
+#dl-screen .beat-copy .scroll-cue.is-visible{opacity:1;visibility:visible}
+#dl-screen .beat-copy .wave-scroll-label{font:400 11px/1 'Instrument Sans',Arial,sans-serif;letter-spacing:.17em;padding-left:.17em;color:#ff9f4d}
+#dl-screen .matrix-preview{pointer-events:none}
+#dl-screen .private-project{z-index:1}
+@media(max-width:760px){
+#dl-screen .beat-copy{left:7%;top:24%;width:86%;height:41%;max-height:none;grid-template-columns:1fr;grid-template-rows:auto auto minmax(0,1fr);column-gap:0}
+#dl-screen .beat-copy .topics{grid-row:1;font-size:clamp(10px,2.72vw,14px);margin-bottom:11px;letter-spacing:-.015em}
+#dl-screen .beat-copy .cue-separator{margin:0 .14em}
+#dl-screen .beat-copy .tabs{grid-row:2;grid-column:1;gap:5px;margin:0 0 12px}
+#dl-screen .beat-copy .tabs button,#dl-screen .beat-copy .visit-site{font-size:14px}
+#dl-screen .beat-copy .viewport{grid-column:1;grid-row:3}
+#dl-screen .beat-copy .panel{left:11px;font-size:14px;line-height:1.5}
+#dl-screen .beat-copy .panel p{margin-bottom:11px}
+#dl-screen .beat-copy .scroll-cue{left:11px}
+#dl-screen .beat-copy .wave-scroll-label{font-size:10px}
+#dl-screen .project{left:50%;top:70%;translate:-50% 0;width:min(43vw,23dvh,195px)}
+}
+@media(max-height:560px) and (min-width:761px){#dl-screen .beat-copy .topics{margin-bottom:11px}#dl-screen .beat-copy .tabs button,#dl-screen .beat-copy .visit-site{font-size:12px}#dl-screen .beat-copy .panel{font-size:13px;line-height:1.45}}
+@media(prefers-reduced-motion:reduce){#dl-screen .beat-copy .scroll-cue{transition:none}}
+/* Keep the existing projects label and return arrow clear on portrait screens. */
+@media(max-width:760px){#dl-screen .beat-copy .viewport{margin-left:clamp(85px,26vw,120px)}}

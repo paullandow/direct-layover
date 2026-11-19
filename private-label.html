@@ -18,7 +18,7 @@ figure{position:absolute;left:16%;top:43%;width:clamp(100px,12vw,146px);margin:0
 .art{position:relative}
 canvas{display:block;width:100%;height:auto}
 .ink{position:absolute;inset:0}
-.caption{margin-top:9px}
+.caption{margin-top:2px}
 footer{position:absolute;right:4%;bottom:12px;line-height:.95;letter-spacing:-.04em}
 footer span{display:block;margin-left:.4em}
 footer small{display:block;margin-left:.55em}
@@ -44,7 +44,7 @@ footer small{display:block;margin-left:.55em}
 body{background:transparent}
 figure{left:calc(49% + min(5.4vw,11dvh,72.5px));top:11%;translate:-50% 0;width:min(5.4vw,11dvh,72.5px)}
 @media(max-width:600px){figure{left:68%;top:28%;width:min(12vw,7.5dvh);translate:-50% 0}}
-</style>
+.play .caption{animation:none!important}</style>
 <main><figure aria-label="Private Label">
 <div class="art"><canvas class="impression" aria-hidden="true"></canvas><canvas class="ink" aria-hidden="true"></canvas></div>
 <canvas class="caption" aria-hidden="true"></canvas>
@@ -55,49 +55,9 @@ figure{left:calc(49% + min(5.4vw,11dvh,72.5px));top:11%;translate:-50% 0;width:m
 const logo=new Image();
 const figure=document.querySelector('figure');
 let motion;
-function replay(){
- const p=document.querySelector('.impression');
- const l=document.querySelector('.ink');
- if(!p.dataset.ready) return;
- cancelAnimationFrame(motion);
- figure.classList.remove('play');
- void figure.offsetWidth;
- figure.classList.add('play');
- let view=document.querySelector('.composite');
- if(!view){
-  view=document.createElement('canvas');
-  view.className='composite';
-  p.parentElement.append(view);
- }
- view.width=p.width*8;
- const insetY=p.height;
- view.height=p.height+2*insetY;
- const ctx=view.getContext('2d');
- const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
- const origin=p.width*3.5;
- const units=p.width/p.getBoundingClientRect().width;
- const reach=Math.min(185,Math.max(125,innerWidth*.17))*units;
- const clamp=x=>Math.max(0,Math.min(1,x));
- const smooth=x=>x*x*(3-2*x);
- const start=performance.now();
- function draw(now){
-  const elapsed=reduced?1740:now-start;
-  ctx.clearRect(0,0,view.width,view.height);
-  for(const [image,direction,lateral,vertical,delay,duration] of [[p,1,.84,-60,0,1520],[l,-1,1.12,24,120,1460]]){
-   const t=clamp((elapsed-delay)/duration);
-   const remaining=1-smooth(t);
-   const x=origin+direction*reach*lateral*remaining;
-   const y=insetY+vertical*units*remaining;
-   ctx.globalCompositeOperation=direction===1?'source-over':'xor';
-   ctx.globalAlpha=smooth(clamp((t-.12)/.50));
-   ctx.drawImage(image,x,y);
-  }
-  ctx.globalAlpha=1;
-  if(elapsed<1580) motion=requestAnimationFrame(draw);
- }
- draw(start);
-}
-window.addEventListener('message',event=>{if(event.origin===location.origin && event.data==='play-private-label') replay();});
+let captionMotion;
+function replay(){const p=document.querySelector('.impression'),l=document.querySelector('.ink'),caption=document.querySelector('.caption');if(!p.dataset.ready)return;if(p.getBoundingClientRect().width<=0){cancelAnimationFrame(motion);motion=requestAnimationFrame(replay);return}cancelAnimationFrame(motion);captionMotion?.cancel();caption.style.opacity='0';figure.classList.remove('play');void figure.offsetWidth;figure.classList.add('play');let view=document.querySelector('.composite');if(!view){view=document.createElement('canvas');view.className='composite';p.parentElement.append(view)}view.width=p.width*8;const insetY=p.height;view.height=p.height+2*insetY;const ctx=view.getContext('2d'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,origin=p.width*3.5,units=p.width/p.getBoundingClientRect().width;const clamp=t=>Math.max(0,Math.min(1,t)),smooth=t=>t*t*(3-2*t);const maxVertical=p.height*.78;const starts=[{image:p,x:(105+Math.random()*70)*units,y:(Math.random()*2-1)*maxVertical},{image:l,x:-(105+Math.random()*70)*units,y:(Math.random()*2-1)*maxVertical}].map((s,index)=>({...s,index,delay:Math.random()*130,duration:1750+Math.random()*350}));document.documentElement.dataset.entryDirections='P:right; L:left; straight';const finish=Math.max(...starts.map(s=>s.delay+s.duration)),start=performance.now();function draw(now){const elapsed=reduced?finish:now-start;ctx.clearRect(0,0,view.width,view.height);for(const entry of starts){const t=clamp((elapsed-entry.delay)/entry.duration),remaining=1-smooth(t);ctx.globalCompositeOperation=entry.index===0?'source-over':'xor';ctx.globalAlpha=smooth(clamp((t-.06)/.48));ctx.drawImage(entry.image,origin+entry.x*remaining,insetY+entry.y*remaining)}ctx.globalAlpha=1;if(elapsed<finish)motion=requestAnimationFrame(draw);else captionMotion=caption.animate([{opacity:0},{opacity:1}],{duration:reduced?0:620,delay:reduced?0:750,easing:'ease',fill:'both'})}draw(start)}
+window.addEventListener('message',event=>{if((event.origin===location.origin||location.protocol==='file:')&&event.data==='play-private-label') replay();});
 logo.onload=()=>{
  const source=document.createElement('canvas');
  const width=source.width=logo.naturalWidth;
