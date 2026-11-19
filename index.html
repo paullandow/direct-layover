@@ -196,7 +196,9 @@ function revealCuePlacer(){
  const length=wave.getTotalLength();
  wave.style.strokeDasharray=glow.style.strokeDasharray=length;
  if(matchMedia('(prefers-reduced-motion:reduce)').matches){waves.style.opacity='0';return;}waves.style.removeProperty('opacity');
- const run=(node,frames,duration,delay,easing='ease')=>node.animate(frames,{duration,delay,easing,fill:'both'});
+ cancelAnimationFrame(beat._revealFrame);
+ const revealAnimations=[];
+ const run=(node,frames,duration,delay,easing='ease')=>{const animation=node.animate(frames,{duration,delay,easing,fill:'both'});animation.pause();animation.currentTime=0;revealAnimations.push(animation);return animation};
  run(wave,[{strokeDashoffset:length},{strokeDashoffset:0}],1300,0,'linear');
  run(glow,[{strokeDashoffset:length,opacity:0},{strokeDashoffset:0,opacity:0}],1300,0,'linear');
  bar.style.transformBox='fill-box';bar.style.transformOrigin='50% 56%';
@@ -228,6 +230,10 @@ function revealCuePlacer(){
  run(wave,[{opacity:1},{opacity:0}],110,1325);
 
  run(name,[{opacity:0},{opacity:1}],1100,1810,'ease-out');
+ // Keep the first half intact, then smoothly extend the remaining reveal by 500 ms.
+ let revealStart;const split=1750,tail=1660;
+ const advance=now=>{if(revealStart===undefined)revealStart=now;const elapsed=now-revealStart,u=Math.max(0,Math.min(tail,elapsed-split)),time=elapsed<=split?elapsed:split+u-500*(u/tail)**2;for(const animation of revealAnimations)if(animation.playState!=='idle')animation.currentTime=time;if(elapsed<split+tail&&revealAnimations.some(a=>a.playState!=='idle'))beat._revealFrame=requestAnimationFrame(advance)};
+ beat._revealFrame=requestAnimationFrame(advance);
 }
 
 const directions=[['-105vw','0px'],['0px','-105vh'],['0px','105vh']];
@@ -491,7 +497,7 @@ entrance();
 
 
 
-<link rel="stylesheet" href="./project-details.css?v=brighter-scroll-1"><script src="./pool-shot.js?v=4-circle-precision" defer></script><script src="./beat-details.js?v=single-fluid-start-1" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script><script src="./direct-layover-brand-geometry.js?v=locked-stems-2" defer></script><script src="./direct-layover-round-dots.js?v=circles-3-baseline" defer></script></body></html>
+<link rel="stylesheet" href="./project-details.css?v=tight-disciplines-1"><script src="./pool-shot.js?v=4-circle-precision" defer></script><script src="./beat-details.js?v=single-fluid-start-1" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script><script src="./direct-layover-brand-geometry.js?v=locked-stems-2" defer></script><script src="./direct-layover-round-dots.js?v=circles-3-baseline" defer></script></body></html>
 
 
 

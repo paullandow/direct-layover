@@ -73,3 +73,9 @@
 #dl-screen .beat-copy .scroll-design{gap:7px}
 #dl-screen .beat-copy .wave-scroll-label{font-size:9px}
 }
+
+/* Tight shared spacing under disciplines. */
+#dl-screen .beat-copy .topics{margin-bottom:5px}
+@media(max-width:760px){#dl-screen .beat-copy .topics{margin-bottom:4px}}
+
+#dl-screen .beat-copy .tabs button:hover b,#dl-screen .beat-copy .tabs a:hover b{color:#ff8000}
