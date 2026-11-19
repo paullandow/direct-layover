@@ -60,7 +60,7 @@
 #dl-screen .beat-copy .tabs{min-width:0;max-width:100%;grid-row:2;grid-column:1}
 #dl-screen .beat-copy .viewport{grid-row:2;grid-column:2;min-width:0;margin:0}
 #dl-screen .beat-copy .panel{top:0;bottom:0;padding-bottom:0}
-#dl-screen .beat-copy .scroll-cue.is-visible{opacity:.2}
+#dl-screen .beat-copy .scroll-cue.is-visible{opacity:.65}
 #dl-screen .beat-copy .scroll-cue.is-visible.is-clear{opacity:1}
 @media(max-width:760px){
 #dl-screen .beat-copy{left:7%;width:88%;top:24%;height:44%;grid-template-columns:max-content minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);column-gap:8px}
