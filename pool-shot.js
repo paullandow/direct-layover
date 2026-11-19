@@ -186,6 +186,7 @@ dot.addEventListener('click',async()=>{
   if(audioContext) setTimeout(()=>void audioContext.close(),250);
  }
 });
+document.addEventListener('dl-brand-aligned',aim);
 new ResizeObserver(aim).observe(stage);
 document.fonts.ready.then(aim);
 aim();
