@@ -79,3 +79,18 @@
 @media(max-width:760px){#dl-screen .beat-copy .topics{margin-bottom:4px}}
 
 #dl-screen .beat-copy .tabs button:hover b,#dl-screen .beat-copy .tabs a:hover b{color:#ff8000}
+
+/* Consistent protected space for responsive portfolio elements. */
+#dl-screen{--protected-gap:clamp(12px,2vw,22px)}
+#dl-screen .beat-copy .tabs button b,#dl-screen .beat-copy .tabs a b{transition:color .18s ease}
+#dl-screen .beat-copy .panel{top:.8em;bottom:.8em}
+@media(max-width:760px){#dl-screen .project{left:30%;translate:-50% 0}#dl-screen .beat-copy .panel{top:.8em;bottom:.8em}}
+
+/* Selected hybrid: split hairline, open chevron at the right edge. */
+#dl-screen .beat-copy .scroll-cue{height:20px}
+#dl-screen .beat-copy .scroll-cue.is-visible{opacity:1}
+#dl-screen .beat-copy .scroll-hairline{display:block;width:100%;height:20px;fill:none;stroke:#ff8000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+#dl-screen .beat-copy .scroll-cue.up .scroll-hairline{transform:scaleY(-1)}
+#dl-screen .beat-copy .quiet-line{opacity:.28}
+#dl-screen .beat-copy .quiet-arrow{opacity:.75}
+#dl-screen .beat-copy .panel{top:calc(20px + .8em);bottom:calc(20px + .8em)}

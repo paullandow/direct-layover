@@ -126,6 +126,7 @@ dot.addEventListener('click',async()=>{
   moving.style.width=moving.style.height=2*radius+'px';
   moving.hidden=false;
   stage.classList.add('shooting');
+  cue.animate([{opacity:1},{opacity:.85,offset:.2},{opacity:0}],{duration:680,easing:'cubic-bezier(.25,.1,.25,1)',fill:'forwards'});
   let previous=start;
   for(let index=0;index<banks.length;index++){
    const next=banks[index];
@@ -158,11 +159,11 @@ dot.addEventListener('click',async()=>{
     const t=elapsed>=duration+extraTime?1:(lo+hi)/2;
     const travel=1-(1-t)**2.65;
     if(!roll&&travel>=touch){
-     void impact(2,.92);
-     roll=oldDot.animate([
-      {transform:'translate(0,0)'},
-      {transform:'translate('+direction.x*23+'px,'+direction.y*23+'px)'}
-     ],{duration:720,easing:'cubic-bezier(.22,.55,.30,1)',fill:'forwards'});
+     const late=Math.max(0,(t-slowdownAt)/(1-slowdownAt)),timeSlope=duration+2*extraTime*late/(1-slowdownAt),incoming=distance*2.65*(1-t)**1.65/timeSlope;
+     const outgoing=incoming*.88,friction=.00014*Math.max(.55,radius/7),rollDistance=Math.min(dotRadius*6,outgoing*outgoing/(2*friction)),rollTime=Math.max(120,2*rollDistance/Math.max(.0001,outgoing));
+     oldDot.dataset.impactSpeed=incoming.toFixed(5);oldDot.dataset.rollDistance=rollDistance.toFixed(3);
+     void impact(2,Math.min(.92,Math.max(.25,incoming*5)));
+     roll=oldDot.animate([{transform:'translate(0,0)'},{transform:'translate('+direction.x*rollDistance+'px,'+direction.y*rollDistance+'px)'}],{duration:rollTime,easing:'cubic-bezier(.333333,.666667,.666667,1)',fill:'forwards'});
     }
     const progress=Math.max(0,(travel-touch)/(1-touch));
     const size=radius+(dotRadius-radius)*progress*progress;
@@ -192,7 +193,7 @@ dot.addEventListener('click',async()=>{
  }
 });
 document.addEventListener('dl-brand-aligned',aim);
-new ResizeObserver(aim).observe(stage);
+const geometryObserver=new ResizeObserver(aim);geometryObserver.observe(stage);geometryObserver.observe(stage.querySelector('header .logo'));visualViewport?.addEventListener('resize',aim);
 document.fonts.ready.then(aim);
 aim();
 
