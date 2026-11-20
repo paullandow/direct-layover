@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1042"
+   height="1214"
+   viewBox="0 0 521 607"
+   role="img"
+   aria-labelledby="title"
+   version="1.1"
+   id="svg12"
+   sodipodi:docname="Full cuePlacer Logo.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     id="namedview12"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.60543657"
+     inkscape:cx="520.28571"
+     inkscape:cy="607"
+     inkscape:window-width="1920"
+     inkscape:window-height="974"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <title
+     id="title">cuePlacer — cP symbol and wordmark</title>
+  <g
+     fill="#363b40"
+     id="g2">
+    <path
+       d="M235 196 C211 174 178 161 143 161 C65.68 161 3 222.78 3 299 C3 375.22 65.68 437 143 437 C178 437 211 424 235 402 L235 374 L212 352 C194 373 171 385 145 385 C96.9516 385 58 346.9442 58 300 C58 253.0558 96.9516 215 145 215 C172 215 194 226 212 243 L229 227 Q235 221.35 235 214 Z"
+       id="path1" />
+    <path
+       fill-rule="evenodd"
+       d="M266 46 H394 C462.4833 46 518 99.9497 518 166.5 C518 233.0503 462.4833 287 394 287 H315 V431 H266 Z M315 94 V229 H394 C429.8985 229 459 198.7792 459 161.5 C459 124.2208 429.8985 94 394 94 Z"
+       id="path2" />
+  </g>
+  <rect
+     x="235"
+     y="15.387755"
+     width="31"
+     height="444.61224"
+     rx="15.5"
+     fill="#ff8000"
+     id="rect2"
+     style="stroke-width:1"
+     ry="15.5" />
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>cuePlacer — cP symbol and wordmark</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g1"
+     transform="matrix(1.8897638,0,0,1.8897638,-40.467984,432.62303)">
+    <g
+       transform="matrix(0.46837262,0,0,0.46837262,24.649064,18.716476)"
+       id="g3-4">
+      <path
+         fill="#363b40"
+         fill-rule="evenodd"
+         d="M 74,55 62,67 C 56,60 48,56 39,56 26,56 17,65 17,79 c 0,14 9,23 22,23 9,0 17,-4 23,-11 l 12,12 C 65,114 53,119 39,119 16,119 0,103 0,79 0,55 16,39 39,39 c 14,0 26,5 35,16 z"
+         id="path3-5" />
+    </g>
+    <g
+       transform="matrix(0.46837262,0,0,0.46837262,59.308638,18.716476)"
+       id="g4-5">
+      <path
+         fill="#363b40"
+         fill-rule="evenodd"
+         d="m 0,41 h 18 v 44 c 0,12 6,18 17,18 12,0 19,-9 19,-22 V 41 h 18 v 76 H 55 V 107 C 49,115 41,119 30,119 11,119 0,107 0,87 Z"
+         id="path4-1" />
+    </g>
+    <g
+       transform="matrix(0.46837262,0,0,0.46837262,93.031466,18.716476)"
+       id="g5-7">
+      <path
+         fill="#363b40"
+         fill-rule="evenodd"
+         d="M 75,82 H 18 c 1,13 9,21 22,21 10,0 18,-4 24,-11 l 11,12 C 66,114 54,119 40,119 16,119 0,103 0,79 0,55 15,39 38,39 61,39 75,55 75,78 Z M 18,68 H 57 C 55,59 49,54 38,54 28,54 21,59 18,68 Z"
+         id="path5-1" />
+    </g>
+    <g
+       transform="matrix(0.46837262,0,0,0.46837262,128.15941,18.716476)"
+       id="g6-1">
+      <path
+         fill="#363b40"
+         fill-rule="evenodd"
+         d="M 0,18 H 37 C 61,18 75,31 75,52 75,73 61,86 37,86 H 18 v 31 H 0 Z M 18,35 V 69 H 36 C 50,69 57,63 57,52 57,41 50,35 36,35 Z"
+         id="path6-5" />
+    </g>
+    <g
+       transform="matrix(0.46837262,0,0,0.42219186,163.28736,18.565708)"
+       id="g7-2"
+       style="stroke-width:1.05327">
+      <rect
+         x="0"
+         y="3"
+         width="16.1"
+         height="140"
+         rx="8.0500002"
+         fill="#ff8000"
+         id="rect6-7"
+         ry="8.9305363"
+         style="stroke-width:1.05327" />
+    </g>
+    <g
+       transform="matrix(0.46837262,0,0,0.46837262,170.83987,18.716476)"
+       id="g8-6">
+      <path
+         fill="#363b40"
+         fill-rule="evenodd"
+         d="M 4,55 C 13,44 25,39 39,39 61,39 71,51 71,72 v 45 H 54 V 107 C 47,115 37,119 26,119 10,119 0,110 0,95 0,77 14,67 37,67 H 53 C 52,58 47,54 37,54 27,54 20,58 15,65 Z M 53,81 H 37 c -13,0 -20,4 -20,12 0,8 5,12 13,12 13,0 23,-9 23,-20 z"
+         id="path7-1" />
+    </g>
+    <g
+       transform="matrix(0.46837262,0,0,0.46837262,204.09432,18.716476)"
+       id="g9-4">
+      <path
+         fill="#363b40"
+         fill-rule="evenodd"
+         d="M 74,55 62,67 C 56,60 48,56 39,56 26,56 17,65 17,79 c 0,14 9,23 22,23 9,0 17,-4 23,-11 l 12,12 C 65,114 53,119 39,119 16,119 0,103 0,79 0,55 16,39 39,39 c 14,0 26,5 35,16 z"
+         id="path8-2" />
+    </g>
+    <g
+       transform="matrix(0.46837262,0,0,0.46837262,235.70948,18.716476)"
+       id="g10-3">
+      <path
+         fill="#363b40"
+         fill-rule="evenodd"
+         d="M 75,82 H 18 c 1,13 9,21 22,21 10,0 18,-4 24,-11 l 11,12 C 66,114 54,119 40,119 16,119 0,103 0,79 0,55 15,39 38,39 61,39 75,55 75,78 Z M 18,68 H 57 C 55,59 49,54 38,54 28,54 21,59 18,68 Z"
+         id="path9-2" />
+    </g>
+    <g
+       transform="matrix(0.46837262,0,0,0.46837262,270.83742,18.716476)"
+       id="g11-2">
+      <path
+         fill="#363b40"
+         fill-rule="evenodd"
+         d="M 0,41 H 17 V 53 C 24,43 33,39 47,40 V 58 C 33,56 18,62 18,80 v 37 H 0 Z"
+         id="path10-1" />
+    </g>
+  </g>
+</svg>

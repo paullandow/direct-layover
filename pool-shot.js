@@ -35,17 +35,18 @@ function measureIDot(style){const key=style.fontWeight+' '+style.fontSize+' '+st
 function aim(){
  if(stage.classList.contains('shooting')||stage.classList.contains('lining'))return;
  const bounds=stage.getBoundingClientRect();
- const ball=dot.getBoundingClientRect();
+ const ball=(stage.querySelector('.brand-period')||dot).getBoundingClientRect();
  const glyph=letter.getBoundingClientRect();
  const radius=ball.width/2;
  const start={x:ball.left-bounds.left+radius,y:ball.top-bounds.top+radius};
  const style=getComputedStyle(letter);
  const {left,right,top,bottom,inkBaseline}=measureIDot(style);
- const target={
+ let target={
   x:glyph.left-bounds.left+(left+right)/2,
   y:baseline.getBoundingClientRect().top-bounds.top-inkBaseline+(top+bottom)/2
  };
- const dotRadius=(right-left)/2;
+ let dotRadius=(right-left)/2;
+ const artwork=stage.querySelector('.logo-art');if(artwork?.dataset.iCx){const box=stage.querySelector('header .logo').getBoundingClientRect(),unit=parseFloat(style.fontSize)/2000;target={x:box.left-bounds.left+Number(artwork.dataset.iCx)*unit,y:box.top-bounds.top+Number(artwork.dataset.iCy)*unit};dotRadius=Number(artwork.dataset.iR)*unit}
  const clipBottom=baseline.getBoundingClientRect().top-inkBaseline+bottom;
  letter.style.clipPath='inset('+Math.max(0,clipBottom-glyph.top)+'px -2px -3px -2px)';
  oldDot.style.width=oldDot.style.height=2*dotRadius+'px';
@@ -78,7 +79,8 @@ function aim(){
  const direction={x:(target.x-bank.x)/distance,y:(target.y-bank.y)/distance};
  const impact={x:target.x-direction.x*(radius+dotRadius),y:target.y-direction.y*(radius+dotRadius)};
  dot.style.setProperty('--cue-angle',route.angle+'rad');
- shot={start,target,bank,banks:route.banks,impact,direction,radius,dotRadius};
+ const hitBox=dot.getBoundingClientRect(),offsetX=start.x-(hitBox.left-bounds.left+hitBox.width/2),offsetY=start.y-(hitBox.top-bounds.top+hitBox.height/2),stick=stage.querySelector('.cue');stick.style.right='calc(50% - '+offsetX+'px)';stick.style.top='calc(50% + '+offsetY+'px)';
+ shot={start,target,bank,banks:route.banks,impact,direction,radius,dotRadius,strength:.55+Math.random()*3.2};
 
 }
 const moving=document.querySelector('.ball');
@@ -89,7 +91,7 @@ dot.addEventListener('click',async()=>{
  if(busy||matchMedia('(prefers-reduced-motion: reduce)').matches) return;
  busy=true;
  aim();
- const {start,target,bank,banks,impact:contact,direction,radius,dotRadius}=shot;
+ const {start,target,bank,banks,impact:contact,direction,radius,dotRadius,strength}=shot;
  const position=point=>'translate('+(point.x-radius)+'px,'+(point.y-radius)+'px)';
  const cueAt=offset=>'translateY(-50%) rotate(var(--cue-angle)) translateX(calc(-.075em - '+offset+'px))';
  const play=(index,volume)=>{
@@ -133,33 +135,38 @@ dot.addEventListener('click',async()=>{
   moving.hidden=false;
   stage.classList.add('shooting');
 
-  let previous=start;
+  let previous=start,finalBankSpeed=0;
   for(let index=0;index<banks.length;index++){
    const next=banks[index];
    const distance=Math.hypot(next.x-previous.x,next.y-previous.y);
-   const duration=Math.max(100,distance/(2.7-index*.35));
+   const launchSpeed=Math.hypot(target.x-bank.x,target.y-bank.y)*2.65*strength/1900,speed=Math.max((2.7-index*.35)*(.8+.25*strength),launchSpeed+(banks.length-index-1)*.22);
+   const duration=Math.max(45,distance/speed);finalBankSpeed=distance/duration;
    await moving.animate([{transform:position(previous)},{transform:position(next)}],{duration,easing:'linear',fill:'forwards'}).finished;
    void impact(1,Math.max(.4,.76-index*.09));
    previous=next;
   }
   moving.getAnimations().forEach(animation=>animation.cancel());
   moving.style.transform=position(bank);
-  const distance=Math.hypot(target.x-bank.x,target.y-bank.y),touch=Math.max(0,1-(radius+dotRadius)/distance);
-  const duration=1900,slowdownAt=.56,extraTime=430,power=2.65;
+  const distance=Math.hypot(target.x-bank.x,target.y-bank.y),needed=radius+dotRadius,touch=Math.max(0,1-needed/distance);
+  const duration=Math.max(1900/strength,distance*2.65/Math.max(.01,finalBankSpeed)),slowdownAt=.56,extraTime=duration*430/1900,power=2.65;
   const collisionT=1-(1-touch)**(1/power),late=Math.max(0,(collisionT-slowdownAt)/(1-slowdownAt)),collisionTime=duration*collisionT+extraTime*late*late;
-  const timeSlope=duration+2*extraTime*late/(1-slowdownAt),incoming=distance*power*(1-collisionT)**(power-1)/timeSlope;
-  const outgoing=incoming*.92,residual=incoming*.08,maxRoll=dotRadius*3,friction=Math.max(.00024*Math.max(.55,radius/7),outgoing*outgoing/(2*maxRoll));
-  const rollDistance=outgoing*outgoing/(2*friction),settleTime=outgoing/friction+180;
-  oldDot.dataset.impactSpeed=incoming.toFixed(5);oldDot.dataset.rollDistance=rollDistance.toFixed(3);
-  const displacement=(velocity,time)=>{const t=Math.max(0,Math.min(time,velocity/friction));return velocity*t-.5*friction*t*t};
+  const timeSlope=duration+2*extraTime*late/(1-slowdownAt),incoming=distance*power*(1-collisionT)**(power-1)/timeSlope,scale=Math.max(.45,radius/7),energy=incoming/scale;
+  const massA=radius*radius,massB=dotRadius*dotRadius,restitution=.6,residual=incoming*Math.max(0,(massA-restitution*massB)/(massA+massB)),outgoing=incoming*(1+restitution)*massA/(massA+massB);
+  const blend=Math.max(0,Math.min(1,(energy-.035)/.065)),friction=(.00032*(1-blend)+.00011*blend)*scale,firstNatural=residual*residual/(2*friction),secondNatural=outgoing*outgoing/(2*friction);
+  const outcome=energy<.035?'short':firstNatural>=needed?'replace':'nudge';stage.dataset.poolOutcome=outcome;
+  const firstDistance=outcome==='replace'?needed:firstNatural,secondDistance=outcome==='replace'?Math.max(needed*1.18,Math.min(needed*2.2,secondNatural)):Math.max(firstDistance*1.2,Math.min(dotRadius*3,secondNatural));
+  oldDot.dataset.impactSpeed=incoming.toFixed(5);oldDot.dataset.rollDistance=(outcome==='short'?0:secondDistance).toFixed(3);
+  const firstFriction=residual*residual/(2*Math.max(.00001,firstDistance)),secondFriction=outgoing*outgoing/(2*Math.max(.00001,secondDistance)),settleTime=Math.max(residual/firstFriction,outgoing/secondFriction)+180;
+  const displacement=(velocity,deceleration,time)=>{const t=Math.max(0,Math.min(time,velocity/deceleration));return velocity*t-.5*deceleration*t*t};
   let collided=false;
-  await new Promise(resolve=>{let startTime;function rollFrame(now){startTime??=now;const elapsed=now-startTime;let x,y;
-    if(elapsed<collisionTime){let lo=0,hi=collisionT;for(let j=0;j<18;j++){const mid=(lo+hi)/2,late=Math.max(0,(mid-slowdownAt)/(1-slowdownAt));if(duration*mid+extraTime*late*late<elapsed)lo=mid;else hi=mid}const t=(lo+hi)/2,travel=Math.min(touch,1-(1-t)**power);x=bank.x+direction.x*distance*travel;y=bank.y+direction.y*distance*travel}
-    else{if(!collided){collided=true;void impact(2,Math.min(.92,Math.max(.25,incoming*5)))}const time=elapsed-collisionTime,first=displacement(residual,time),second=displacement(outgoing,time);x=contact.x+direction.x*first;y=contact.y+direction.y*first;oldDot.style.transform='translate('+direction.x*second+'px,'+direction.y*second+'px)';stage.dataset.poolSeparation=(radius+dotRadius+second-first).toFixed(4);stage.dataset.poolMinimumSeparation=(radius+dotRadius).toFixed(4)}
-    moving.style.transform=position({x,y});if(elapsed<collisionTime+settleTime)requestAnimationFrame(rollFrame);else resolve()}
+  await new Promise(resolve=>{let startTime;function rollFrame(now){startTime??=now;const elapsed=now-startTime;let x,y,size=radius,done=false;
+    if(outcome==='short'){const t=Math.min(1,elapsed/(duration+extraTime)),stopDistance=Math.max(0,distance-needed-needed*.45),travel=stopDistance*(1-(1-t)**power);x=bank.x+direction.x*travel;y=bank.y+direction.y*travel;done=elapsed>=duration+extraTime+180}
+    else if(elapsed<collisionTime){let lo=0,hi=collisionT;for(let j=0;j<18;j++){const mid=(lo+hi)/2,late=Math.max(0,(mid-slowdownAt)/(1-slowdownAt));if(duration*mid+extraTime*late*late<elapsed)lo=mid;else hi=mid}const t=(lo+hi)/2,travel=Math.min(touch,1-(1-t)**power);x=bank.x+direction.x*distance*travel;y=bank.y+direction.y*distance*travel}
+    else{if(!collided){collided=true;void impact(2,Math.min(.92,Math.max(.25,incoming*5)))}const time=elapsed-collisionTime,first=displacement(residual,firstFriction,time),second=displacement(outgoing,secondFriction,time);x=contact.x+direction.x*first;y=contact.y+direction.y*first;oldDot.style.transform='translate('+direction.x*second+'px,'+direction.y*second+'px)';if(outcome==='replace'){const progress=Math.max(0,Math.min(1,first/needed)),smooth=progress*progress*(3-2*progress);size=radius+(dotRadius-radius)*smooth}stage.dataset.poolSeparation=(needed+second-first).toFixed(4);stage.dataset.poolMinimumSeparation=(needed).toFixed(4);done=elapsed>=collisionTime+settleTime}
+    moving.style.width=moving.style.height=2*size+'px';moving.style.transform='translate('+(x-size)+'px,'+(y-size)+'px)';if(!done)requestAnimationFrame(rollFrame);else resolve()}
     requestAnimationFrame(rollFrame)});
   // The cue and both balls dissolve together after the collision has settled.
-  await Promise.all([cue,moving,oldDot].map(node=>node.animate([{opacity:1},{opacity:0}],{duration:560,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).finished));
+  await Promise.all([cue,moving,oldDot].map(node=>node.animate([{opacity:1},{opacity:0}],{duration:850,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).finished));
   oldDot.style.opacity='0';
   await new Promise(resolve=>setTimeout(resolve,80));
  }finally{
@@ -169,7 +176,7 @@ dot.addEventListener('click',async()=>{
   moving.getAnimations().forEach(animation=>animation.cancel());
   cue.getAnimations().forEach(animation=>animation.cancel());
   stage.classList.remove('shooting','lining');
-  dot.animate([{opacity:0},{opacity:1}],{duration:220,easing:'ease-out'});
+  (stage.querySelector('.brand-period')||dot).animate([{opacity:0},{opacity:1}],{duration:220,easing:'ease-out'});
   const resetDot=oldDot.animate([{opacity:0},{opacity:1}],{duration:220,easing:'ease-out',fill:'forwards'});resetDot.finished.then(()=>{oldDot.style.opacity='1';resetDot.cancel()}).catch(()=>{});
   busy=false;
   aim();

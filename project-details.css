@@ -97,3 +97,13 @@
 
 /* Maximize readable height; keep text clear of the hairline waveform. */
 #dl-screen .beat-copy .panel{top:20px;bottom:20px}
+
+/* Supplied outlined master; text remains only as the accessible interaction geometry. */
+#dl-screen header .logo{position:relative;color:transparent}
+#dl-screen .logo .dot{background:transparent;z-index:2}
+#dl-screen .logo-art{position:absolute;left:-.0425159365em;top:-.068745554em;width:3.5728434725em;height:1.955045795em;max-width:none;pointer-events:none;filter:invert(1);overflow:visible;z-index:1}
+#dl-screen.shooting .logo-art .brand-period{visibility:hidden}
+#dl-screen #bm-size .symbol .wordmark{margin:0}
+
+/* Keep pool-ball difference blending above the outlined artwork. */
+#dl-screen .ball,#dl-screen .i-ball{z-index:10}
