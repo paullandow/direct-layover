@@ -1,4 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Direct Layover</title><style>body{margin:0}html,body{overflow:hidden}#dl-screen#dl-screen{min-height:0;height:100dvh}#dl-screen .private-project{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none;filter:invert(1);z-index:1}
+#dl-screen:not(.site-ready) :is(header .logo,footer,.toggle,.contact,.about,.i-ball){visibility:hidden!important}
 #dl-screen .dot{position:relative;border:0;padding:0;cursor:pointer;font:inherit}
 #dl-screen .cue{position:absolute;right:50%;top:50%;width:clamp(90px,29vw,285px);height:13px;transform:translateY(-50%) rotate(var(--cue-angle,-9deg)) translateX(-.075em);transform-origin:right center;overflow:visible;visibility:hidden;opacity:0;pointer-events:none}
 #dl-screen .cue path{stroke:#fff}
@@ -44,7 +45,7 @@
 <style>
 #dl-screen{min-height:clamp(390px,60vw,610px);box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:clamp(17px,5vw,52px);background:#f8f6f0;color:#000;font:500 16px Geist,Arial,sans-serif}
 #dl-screen header{display:flex;justify-content:space-between;align-items:start;gap:12px}
-#dl-screen .logo{font-size:clamp(51.6px,9.66vw,112.8px);line-height:.84;letter-spacing:-.09em;animation:dl-arrive 700ms ease-out both}
+#dl-screen .logo{font-size:clamp(45.15px,8.4525vw,98.7px);line-height:.84;letter-spacing:-.09em;animation:dl-arrive 700ms ease-out both}
 #dl-screen .indent{margin-left:.4em}
 #dl-screen .dot{display:inline-block;width:.15em;height:.15em;background:#000;border-radius:50%;margin-left:.025em}
 #dl-screen footer{text-align:right;letter-spacing:-.04em}
@@ -261,6 +262,7 @@ function reset(){
  back.hidden=true;
  labels.forEach(label=>{
   label.classList.remove('muted-label');
+  label.style.removeProperty('visibility');
   label.disabled=false;
   label.setAttribute('aria-expanded','false');
  });
@@ -269,7 +271,7 @@ function reset(){
 function entrance(){
  reset();
  root.classList.remove('arriving');
- const fixed=root.querySelectorAll('.logo,footer');
+ const fixed=root.querySelectorAll('.logo,footer,.i-ball');
  fixed.forEach(node=>node.style.animationName='none');
  void root.offsetWidth;
  fixed.forEach(node=>node.style.removeProperty('animation-name'));
@@ -302,7 +304,9 @@ async function select(label,index){
  const trail=document.createElement('span');
  trail.className='moving-trail';
  root.append(word,trail);
+ window.prepareDirectLayoverDots?.(word);
  clones=[word,trail];
+ label.style.visibility='hidden';
  active=word;
  selectedLabel=label;
  clock=performance.now();
@@ -430,7 +434,7 @@ async function rewind(){
   ).finished.catch(()=>{});
  }
  if(active!==current) return;
- back.hidden=true;
+ if(reduced.matches)back.hidden=true;else arrowExit.then(()=>{if(active===current)back.hidden=true});
  if(!reduced.matches){
   const returning=label===labels[0]?timeline.filter(animation=>!current.contains(animation.effect.target)):timeline;
   returning.forEach(animation=>{
@@ -474,7 +478,8 @@ async function rewind(){
 }
 back.addEventListener('click',rewind);
 root.addEventListener('keydown',event=>{if(event.key==='Escape') rewind();});
-entrance();
+async function readyEntrance(){await Promise.allSettled([document.fonts.load('500 16px Geist'),document.fonts.load('400 16px "Instrument Sans"'),document.fonts.ready]);window.updateDirectLayoverBrand?.();window.refreshDirectLayoverDots?.();requestAnimationFrame(()=>requestAnimationFrame(()=>{window.updateDirectLayoverBrand?.();root.classList.add('site-ready');entrance()}))}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',readyEntrance,{once:true});else void readyEntrance();
 }
 </script>
 
@@ -497,7 +502,7 @@ entrance();
 
 
 
-<link rel="stylesheet" href="./project-details.css?v=quiet-wave-scroll-1"><script src="./pool-shot.js?v=responsive-impulse-1" defer></script><script src="./beat-details.js?v=quiet-wave-scroll-1" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script><script src="./direct-layover-brand-geometry.js?v=locked-stems-2" defer></script><script src="./direct-layover-round-dots.js?v=mobile-size-lock-2" defer></script></body></html>
+<link rel="stylesheet" href="./project-details.css?v=taller-text-1"><script src="./pool-shot.js?v=cached-dot-metrics-2" defer></script><script src="./beat-details.js?v=atomic-text-handoff-1" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script><script src="./direct-layover-brand-geometry.js?v=cached-stems-3" defer></script><script src="./direct-layover-round-dots.js?v=prepared-glyphs-1" defer></script></body></html>
 
 
 

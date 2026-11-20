@@ -94,3 +94,6 @@
 #dl-screen .beat-copy .quiet-line{opacity:.28}
 #dl-screen .beat-copy .quiet-arrow{opacity:.75}
 #dl-screen .beat-copy .panel{top:calc(20px + .8em);bottom:calc(20px + .8em)}
+
+/* Maximize readable height; keep text clear of the hairline waveform. */
+#dl-screen .beat-copy .panel{top:20px;bottom:20px}

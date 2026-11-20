@@ -6,20 +6,14 @@ const letter=document.querySelector('.target-i');
 const baseline=document.querySelector('.baseline');
 let shot;
 const oldDot=document.querySelector(".i-ball");
-function aim(){
- if(stage.classList.contains('shooting')||stage.classList.contains('lining'))return;
- const bounds=stage.getBoundingClientRect();
- const ball=dot.getBoundingClientRect();
- const glyph=letter.getBoundingClientRect();
- const radius=ball.width/2;
- const start={x:ball.left-bounds.left+radius,y:ball.top-bounds.top+radius};
- const style=getComputedStyle(letter);
+const dotMetricCache=new Map();
+function measureIDot(style){const key=style.fontWeight+' '+style.fontSize+' '+style.fontFamily;if(dotMetricCache.has(key))return dotMetricCache.get(key);
  const sample=document.createElement('canvas');
  const size=parseFloat(style.fontSize);
  const precision=8;
  sample.width=Math.ceil(size*2*precision);
  sample.height=Math.ceil(size*2*precision);
- const ctx=sample.getContext('2d');
+ const ctx=sample.getContext('2d',{willReadFrequently:true});
  ctx.scale(precision,precision);
  ctx.font=style.fontWeight+' '+style.fontSize+' '+style.fontFamily;
  const inkBaseline=size*1.25;
@@ -37,6 +31,16 @@ function aim(){
   else if(y2>0) break;
  }
  const left=x1/precision,right=(x2+1)/precision,top=y1/precision,bottom=(y2+1)/precision;
+ const result={left,right,top,bottom,inkBaseline};dotMetricCache.set(key,result);return result}
+function aim(){
+ if(stage.classList.contains('shooting')||stage.classList.contains('lining'))return;
+ const bounds=stage.getBoundingClientRect();
+ const ball=dot.getBoundingClientRect();
+ const glyph=letter.getBoundingClientRect();
+ const radius=ball.width/2;
+ const start={x:ball.left-bounds.left+radius,y:ball.top-bounds.top+radius};
+ const style=getComputedStyle(letter);
+ const {left,right,top,bottom,inkBaseline}=measureIDot(style);
  const target={
   x:glyph.left-bounds.left+(left+right)/2,
   y:baseline.getBoundingClientRect().top-bounds.top-inkBaseline+(top+bottom)/2
@@ -194,7 +198,7 @@ dot.addEventListener('click',async()=>{
 });
 document.addEventListener('dl-brand-aligned',aim);
 const geometryObserver=new ResizeObserver(aim);geometryObserver.observe(stage);geometryObserver.observe(stage.querySelector('header .logo'));visualViewport?.addEventListener('resize',aim);
-document.fonts.ready.then(aim);
+document.fonts.ready.then(()=>{dotMetricCache.clear();aim()});document.fonts.addEventListener('loadingdone',()=>{dotMetricCache.clear();aim()});
 aim();
 
 }
