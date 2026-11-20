@@ -68,6 +68,8 @@ function aim(){
   if(hits.length<1||hits.length>4||hits.some((hit,i)=>i&&hit.t-hits[i-1].t<.015))continue;
   const fold=(value,span)=>{const phase=((value%(2*span))+2*span)%(2*span);return phase>span?2*span-phase:phase;};
   const banks=hits.map(hit=>({x:radius+fold(local.x+dx*hit.t,width),y:radius+fold(local.y+dy*hit.t,height)}));
+  const clearance=radius+dotRadius+1;
+  if(banks.some((next,index)=>{const previous=index?banks[index-1]:start,dx=next.x-previous.x,dy=next.y-previous.y,along=Math.max(0,Math.min(1,((target.x-previous.x)*dx+(target.y-previous.y)*dy)/(dx*dx+dy*dy)));return Math.hypot(previous.x+along*dx-target.x,previous.y+along*dy-target.y)<clearance}))continue;
   candidates.push({banks,angle:Math.atan2(dy,dx)});
  }
  const route=candidates[Math.floor(Math.random()*candidates.length)];
@@ -130,7 +132,7 @@ dot.addEventListener('click',async()=>{
   moving.style.width=moving.style.height=2*radius+'px';
   moving.hidden=false;
   stage.classList.add('shooting');
-  cue.animate([{opacity:1},{opacity:.85,offset:.2},{opacity:0}],{duration:680,easing:'cubic-bezier(.25,.1,.25,1)',fill:'forwards'});
+
   let previous=start;
   for(let index=0;index<banks.length;index++){
    const next=banks[index];
@@ -142,55 +144,33 @@ dot.addEventListener('click',async()=>{
   }
   moving.getAnimations().forEach(animation=>animation.cancel());
   moving.style.transform=position(bank);
-  let roll;
-  const distance=Math.hypot(target.x-bank.x,target.y-bank.y);
-  const touch=Math.hypot(contact.x-bank.x,contact.y-bank.y)/distance;
-  const duration=1900;
-  const slowdownAt=.56;
-  const extraTime=430;
-  await new Promise(resolve=>{
-   let startTime;
-   function rollFrame(now){
-    startTime??=now;
-    const elapsed=now-startTime;
-    let lo=0,hi=1;
-    for(let j=0;j<16;j++){
-     const midpoint=(lo+hi)/2;
-     const late=Math.max(0,(midpoint-slowdownAt)/(1-slowdownAt));
-     if(duration*midpoint+extraTime*late*late<elapsed) lo=midpoint;
-     else hi=midpoint;
-    }
-    const t=elapsed>=duration+extraTime?1:(lo+hi)/2;
-    const travel=1-(1-t)**2.65;
-    if(!roll&&travel>=touch){
-     const late=Math.max(0,(t-slowdownAt)/(1-slowdownAt)),timeSlope=duration+2*extraTime*late/(1-slowdownAt),incoming=distance*2.65*(1-t)**1.65/timeSlope;
-     const outgoing=incoming*.88,friction=.00014*Math.max(.55,radius/7),rollDistance=Math.min(dotRadius*6,outgoing*outgoing/(2*friction)),rollTime=Math.max(120,2*rollDistance/Math.max(.0001,outgoing));
-     oldDot.dataset.impactSpeed=incoming.toFixed(5);oldDot.dataset.rollDistance=rollDistance.toFixed(3);
-     void impact(2,Math.min(.92,Math.max(.25,incoming*5)));
-     roll=oldDot.animate([{transform:'translate(0,0)'},{transform:'translate('+direction.x*rollDistance+'px,'+direction.y*rollDistance+'px)'}],{duration:rollTime,easing:'cubic-bezier(.333333,.666667,.666667,1)',fill:'forwards'});
-    }
-    const progress=Math.max(0,(travel-touch)/(1-touch));
-    const size=radius+(dotRadius-radius)*progress*progress;
-    const x=bank.x+(target.x-bank.x)*travel;
-    const y=bank.y+(target.y-bank.y)*travel;
-    moving.style.width=moving.style.height=2*size+'px';
-    moving.style.transform='translate('+(x-size)+'px,'+(y-size)+'px)';
-
-    if(t<1) requestAnimationFrame(rollFrame);
-    else resolve();
-   }
-   requestAnimationFrame(rollFrame);
-  });
-  await roll.finished;
-  await oldDot.animate([{opacity:1},{opacity:0}],{duration:190,fill:'forwards'}).finished;
-  await new Promise(resolve=>setTimeout(resolve,220));
+  const distance=Math.hypot(target.x-bank.x,target.y-bank.y),touch=Math.max(0,1-(radius+dotRadius)/distance);
+  const duration=1900,slowdownAt=.56,extraTime=430,power=2.65;
+  const collisionT=1-(1-touch)**(1/power),late=Math.max(0,(collisionT-slowdownAt)/(1-slowdownAt)),collisionTime=duration*collisionT+extraTime*late*late;
+  const timeSlope=duration+2*extraTime*late/(1-slowdownAt),incoming=distance*power*(1-collisionT)**(power-1)/timeSlope;
+  const outgoing=incoming*.92,residual=incoming*.08,maxRoll=dotRadius*3,friction=Math.max(.00024*Math.max(.55,radius/7),outgoing*outgoing/(2*maxRoll));
+  const rollDistance=outgoing*outgoing/(2*friction),settleTime=outgoing/friction+180;
+  oldDot.dataset.impactSpeed=incoming.toFixed(5);oldDot.dataset.rollDistance=rollDistance.toFixed(3);
+  const displacement=(velocity,time)=>{const t=Math.max(0,Math.min(time,velocity/friction));return velocity*t-.5*friction*t*t};
+  let collided=false;
+  await new Promise(resolve=>{let startTime;function rollFrame(now){startTime??=now;const elapsed=now-startTime;let x,y;
+    if(elapsed<collisionTime){let lo=0,hi=collisionT;for(let j=0;j<18;j++){const mid=(lo+hi)/2,late=Math.max(0,(mid-slowdownAt)/(1-slowdownAt));if(duration*mid+extraTime*late*late<elapsed)lo=mid;else hi=mid}const t=(lo+hi)/2,travel=Math.min(touch,1-(1-t)**power);x=bank.x+direction.x*distance*travel;y=bank.y+direction.y*distance*travel}
+    else{if(!collided){collided=true;void impact(2,Math.min(.92,Math.max(.25,incoming*5)))}const time=elapsed-collisionTime,first=displacement(residual,time),second=displacement(outgoing,time);x=contact.x+direction.x*first;y=contact.y+direction.y*first;oldDot.style.transform='translate('+direction.x*second+'px,'+direction.y*second+'px)';stage.dataset.poolSeparation=(radius+dotRadius+second-first).toFixed(4);stage.dataset.poolMinimumSeparation=(radius+dotRadius).toFixed(4)}
+    moving.style.transform=position({x,y});if(elapsed<collisionTime+settleTime)requestAnimationFrame(rollFrame);else resolve()}
+    requestAnimationFrame(rollFrame)});
+  // The cue and both balls dissolve together after the collision has settled.
+  await Promise.all([cue,moving,oldDot].map(node=>node.animate([{opacity:1},{opacity:0}],{duration:560,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).finished));
+  oldDot.style.opacity='0';
+  await new Promise(resolve=>setTimeout(resolve,80));
  }finally{
   oldDot.getAnimations().forEach(animation=>animation.cancel());
+  oldDot.style.transform='translate(0,0)';
   moving.hidden=true;
   moving.getAnimations().forEach(animation=>animation.cancel());
   cue.getAnimations().forEach(animation=>animation.cancel());
   stage.classList.remove('shooting','lining');
   dot.animate([{opacity:0},{opacity:1}],{duration:220,easing:'ease-out'});
+  const resetDot=oldDot.animate([{opacity:0},{opacity:1}],{duration:220,easing:'ease-out',fill:'forwards'});resetDot.finished.then(()=>{oldDot.style.opacity='1';resetDot.cancel()}).catch(()=>{});
   busy=false;
   aim();
   if(audioContext) setTimeout(()=>void audioContext.close(),250);
