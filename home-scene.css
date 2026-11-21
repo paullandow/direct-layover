@@ -1,0 +1,7 @@
+/* The selected childhood-tree drawing stays untouched; masks clear actual ink contours. */
+#dl-screen .home-tree{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;filter:invert(1);opacity:0;overflow:hidden}
+#dl-screen.site-ready .home-tree{animation:home-tree-arrive 1200ms ease 650ms both}
+@keyframes home-tree-arrive{from{opacity:0}to{opacity:.7}}
+#dl-screen .rabbit-scene{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:30;filter:invert(1)}
+#dl-screen .rabbit-egg{position:absolute;z-index:31;padding:0;border:0;background:none;filter:invert(1);transform-origin:50% 82%;opacity:0;pointer-events:none}
+@media(prefers-reduced-motion:reduce){#dl-screen.site-ready .home-tree{animation:none;opacity:.7}}
