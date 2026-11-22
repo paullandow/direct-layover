@@ -107,3 +107,6 @@
 
 /* Keep pool-ball difference blending above the outlined artwork. */
 #dl-screen .ball,#dl-screen .i-ball{z-index:10}
+
+/* Match native description shaping to the individually animated glyphs. */
+#dl-screen .beat-copy,#dl-screen .beat-copy *{font-kerning:none;font-variant-ligatures:none}

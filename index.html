@@ -328,7 +328,7 @@ async function select(label,index){
  const style=getComputedStyle(label);
  const speed=reduced.matches?0:parseFloat(label.style.getPropertyValue('--duration'));
  const word=document.createElement('span');
- word.className='moving-label';
+ word.className='moving-label';word.dataset.section=label.classList.contains('about')?'about':label.classList.contains('contact')?'contact':'projects';
  word.style.font=style.font;
  word.style.letterSpacing=style.letterSpacing;
  word.style.left=(rect.left-bounds.left+parseFloat(style.paddingLeft))+'px';
@@ -389,7 +389,7 @@ async function select(label,index){
  const top=parseFloat(word.style.top);
  colon.style.visibility='hidden';
  const tip=document.createElement('span');
- tip.className='moving-label';
+ tip.className='moving-label';tip.dataset.section=word.dataset.section;
  tip.style.font=style.font;
  tip.textContent=':';
  const end=endX+word.offsetWidth-colon.offsetWidth;
@@ -539,7 +539,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 
 
-<link rel="stylesheet" href="./project-details.css?v=approved-vector-masters-1"><script src="./pool-shot.js?v=slow-shared-fade-4" defer></script><script src="./beat-details.js?v=stable-detail-transitions-3" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script><script src="./direct-layover-brand-geometry.js?v=cached-stems-3" defer></script><script src="./direct-layover-round-dots.js?v=prepared-glyphs-1" defer></script><script src="./home-tree.js?v=tree-rabbit-1" defer></script><script src="./home-rabbit.js?v=egg-only-2" defer></script></body></html>
+<link rel="stylesheet" href="./project-details.css?v=matched-glyph-shaping-2"><script src="./pool-shot.js?v=slow-shared-fade-4" defer></script><script src="./beat-details.js?v=stable-glyph-handoff-4" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script><script src="./direct-layover-brand-geometry.js?v=cached-stems-3" defer></script><script src="./direct-layover-round-dots.js?v=prepared-glyphs-1" defer></script><script src="./home-tree.js?v=about-clearance-2" defer></script><script src="./home-rabbit.js?v=egg-only-2" defer></script></body></html>
 
 
 
