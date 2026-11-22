@@ -41,7 +41,7 @@
 #dl-screen .app-copy{margin-left:.65em}
 #dl-screen .beat-copy:has(.app-description[open]){top:10%;font-size:clamp(11px,1vw,14px);line-height:1.3}
 @media(max-width:680px){#dl-screen .beat-copy:has(.app-description[open]){top:15%;font-size:clamp(9px,2.55vw,12px);line-height:1.23}}
-</style><link rel="icon" type="image/svg+xml" href="./favicon.svg?v=dl1"><link rel="icon" type="image/png" sizes="64x64" href="./favicon.png?v=dl1"><link rel="shortcut icon" href="./favicon.ico?v=dl1"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400&display=swap"><link rel="preload" href="./assets/childhood-tree.png" as="image"><link rel="stylesheet" href="./home-scene.css?v=tree-rabbit-1"></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap">
+</style><link rel="icon" type="image/svg+xml" href="./favicon.svg?v=dl1"><link rel="icon" type="image/png" sizes="64x64" href="./favicon.png?v=dl1"><link rel="shortcut icon" href="./favicon.ico?v=dl1"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400&display=swap"><link rel="preload" href="./assets/childhood-tree.png" as="image"><link rel="stylesheet" href="./home-scene.css?v=tree-rabbit-1"><link rel="stylesheet" href="./about-copy.css?v=1"><script src="./about-copy.js?v=1" defer></script></head><body><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap">
 <style>
 #dl-screen{min-height:clamp(390px,60vw,610px);box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:clamp(17px,5vw,52px);background:#f8f6f0;color:#000;font:500 16px Geist,Arial,sans-serif}
 #dl-screen header{display:flex;justify-content:space-between;align-items:start;gap:12px}
@@ -289,6 +289,7 @@ let selectedLabel;
 let timeline=[];
 let clock;
 function reset(){
+ window.dlAboutCopy?.reset();
  active=undefined;
  reversing=false;
  timeline=[];
@@ -342,6 +343,7 @@ async function select(label,index){
  trail.className='moving-trail';
  root.append(word,trail);
  window.prepareDirectLayoverDots?.(word);
+ if(index===2){word.style.pointerEvents='auto';word.style.cursor='pointer';word.setAttribute('role','button');word.tabIndex=0;word.setAttribute('aria-label','Close About');word.addEventListener('click',rewind);word.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();rewind()}});}
  clones=[word,trail];
  label.style.visibility='hidden';
  active=word;
@@ -441,6 +443,7 @@ async function select(label,index){
    setTimeout(showPrivate,start+(privateFirst?0:150+Math.random()*400));
   }
  }
+ if(index===2) window.dlAboutCopy?.enter(Math.max(0,delay+timing.duration-200));
  await Promise.all([motion.finished,dashMotion.finished,arrival.finished]).catch(()=>{});
  if(active!==word || reversing) return;
  
@@ -452,9 +455,10 @@ async function rewind(){
  reversing=true;
  const current=active;
  const label=selectedLabel;
+ const aboutExit=label===labels[2]?window.dlAboutCopy?.exit():Promise.resolve();
  const end=Math.max(0,...timeline.map(animation=>animation.effect.getComputedTiming().endTime));
  const elapsed=Math.min(performance.now()-clock,end);
- panels.filter(panel=>panel && !panel.hidden).forEach(panel=>{
+ panels.filter(panel=>panel && panel.id!=='dl-about' && !panel.hidden).forEach(panel=>{
   if(reduced.matches){panel.hidden=true;return;}
   const fade=panel.animate([{opacity:1},{opacity:0}],{duration:360,easing:'ease-out',fill:'forwards'});
   fade.finished.then(()=>{
@@ -500,7 +504,7 @@ async function rewind(){
     {opacity:1,transform:'translate(0,0)'}
    ],{duration,easing:'cubic-bezier(.24,.66,.31,1)',fill:'both'});
   });
-  await Promise.all([arrowExit,...exits,...arrivals.map(animation=>animation.finished.catch(()=>{}))]);
+  await Promise.all([aboutExit,arrowExit,...exits,...arrivals.map(animation=>animation.finished.catch(()=>{}))]);
   if(active!==current) return;
   const originalTransition=label.style.transition;
   label.style.transition='none';
@@ -539,7 +543,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 
 
-<link rel="stylesheet" href="./project-details.css?v=matched-glyph-shaping-2"><script src="./pool-shot.js?v=slow-shared-fade-4" defer></script><script src="./beat-details.js?v=stable-glyph-handoff-4" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script><script src="./direct-layover-brand-geometry.js?v=cached-stems-3" defer></script><script src="./direct-layover-round-dots.js?v=prepared-glyphs-1" defer></script><script src="./home-tree.js?v=about-clearance-2" defer></script><script src="./home-rabbit.js?v=egg-only-2" defer></script></body></html>
+<link rel="stylesheet" href="./project-details.css?v=matched-glyph-shaping-2"><script src="./pool-shot.js?v=slow-shared-fade-4" defer></script><script src="./beat-details.js?v=stable-glyph-handoff-4" defer></script><script src="./oh-baby.js?v=tighter-gap" defer></script><script src="./direct-layover-brand-geometry.js?v=cached-stems-3" defer></script><script src="./direct-layover-round-dots.js?v=prepared-glyphs-1" defer></script><script src="./home-tree.js?v=about-copy-contours-3" defer></script><script src="./home-rabbit.js?v=egg-only-2" defer></script></body></html>
 
 
 

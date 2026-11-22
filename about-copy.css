@@ -1,0 +1,7 @@
+#dl-screen#dl-screen #dl-about{inset:0;z-index:3;padding:0;background:none;pointer-events:none;mix-blend-mode:difference}
+#dl-screen #dl-about[hidden]{display:none}
+#dl-screen .about-disciplines{position:absolute;right:4%;top:5.5%;max-width:65%;font:400 clamp(16px,1.45vw,28px)/1.35 Geist,Arial,sans-serif;letter-spacing:-.035em;margin:0}
+#dl-screen .about-statement{position:absolute;left:13.5%;top:57%;width:65%;font:400 clamp(24px,2.65vw,51px)/1.22 Geist,Arial,sans-serif;letter-spacing:-.045em}
+#dl-screen .about-copy-line{display:block;will-change:transform,opacity}
+@media(max-width:680px){#dl-screen .about-disciplines{top:40%;right:6%;max-width:70%;font-size:clamp(16px,3.8vw,23px)}#dl-screen .about-statement{left:24%;top:60%;width:70%;font-size:clamp(23px,5.5vw,36px)}}
+@media(max-height:480px) and (min-width:681px){#dl-screen .about-disciplines{top:8%;max-width:54%;font-size:16px}#dl-screen .about-statement{top:59%;font-size:clamp(22px,2.6vw,34px)}}
