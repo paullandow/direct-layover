@@ -413,7 +413,7 @@ async function select(label,index){
  tip.animate(sweepFrames,sweep);
  timeline=clones.flatMap(node=>node.getAnimations({subtree:true}));
  back.style.left=endX+'px';
- back.style.top=(inkBottom+8)+'px';
+ back.style.top=(inkBottom+2)+'px';
  back.hidden=false;
  const arrowDuration=reduced.matches?0:Math.min(1100,sweep.duration);
  const arrival=back.animate(
